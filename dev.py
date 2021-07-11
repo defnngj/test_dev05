@@ -9,8 +9,10 @@ def add(a, b):
 def sub(a, b):
     return a - b
 
-c1 = add(2, 3)
-print(c1)
 
-c2 = sub(2, 3)
-print(c2)
+if __name__ == '__main__':
+    # 测试代码
+    c = add(2, 3)
+    print(c)
+    c2 = sub(2, 3)
+    print(c2)
