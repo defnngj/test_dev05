@@ -12,12 +12,12 @@ def sub(a, b):
 def mul(a, b):
     return a * b
 
-c1 = add(2, 3)
-print(c1)
 
-c2 = sub(2, 3)
-print(c2)
-
-c3 = mul(2, 3)
-print(c3)
-
+if __name__ == '__main__':
+    # 测试代码
+    c = add(2, 3)
+    print(c)
+    c2 = sub(2, 3)
+    print(c2)
+    c3 = mul(2, 3)
+    print(c3)
