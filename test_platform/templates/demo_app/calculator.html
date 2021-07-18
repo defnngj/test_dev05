@@ -1,0 +1,37 @@
+<h1>计算器</h1><br>
+<!-- 表单的方式
+<form action="/calculator/" method="post">
+    <input type="text" name="number_a" value=""> +
+    <input type="text" name="number_b" value=""> =  {{ result }}
+    <input type="submit" value="计算">
+</form> -->
+
+
+<input type="text" id="number_a" value=""> +
+<input type="text" id="number_b" value=""> = <span id="result"></span>
+<button onclick="count()">计算</button>
+
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+    function count() {
+        var numberA = $("#number_a").val()
+        var numberB = $("#number_b").val()
+        // window.alert("点击了计算按钮")
+        $.post("/api/add/",{
+            number_a: numberA,
+            number_b: numberB
+        },function(result){
+            // window.alert(result.data.count)
+            // $("#result").append("")
+            // $("#result").append(result.data.count)
+            document.querySelector("#result").innerText = result.data.count;
+            
+            $.post("/api/count/", {
+                result: result.data.count,
+            }, function(result) {
+                result.data
+            });
+        });
+    }
+
+</script>

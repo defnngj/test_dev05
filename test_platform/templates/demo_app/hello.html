@@ -1,0 +1,14 @@
+<h1 style="color:red;text-align: center; margin-top: 50px;">hello, django</h1><br>
+
+<form action="/hello/" method="post">
+    用户:<br>
+    <input type="text" name="username" value="Mickey">
+    <br>
+    密码:<br>
+    <input type="password" name="password" value="Mouse">
+    <br><br>
+    <input type="submit" value="Submit">
+    {{ hint }}
+<!--    {% csrf_token %}-->
+</form>
+
