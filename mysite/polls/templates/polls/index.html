@@ -1,0 +1,38 @@
+{% extends "polls/base.html" %}
+{% block base %}
+<!-- end page title -->
+<!--                        问题列表-->
+  <div class="row">
+      <div class="col-lg-6 col-xl-3" style="width: 100%">
+          <div class="card">
+              <div class="card-body">
+                  <div class="row align-items-center">
+                      <div class="col-6">
+                          <h5 class="text-muted fw-normal mt-0 text-truncate" title="Campaign Sent">问题列表</h5>
+                          <p class="mb-0 text-muted">
+                            {% if latest_question_list %}
+                                <ul>
+                                {% for question in latest_question_list %}
+                                    <li><a href="{% url 'polls:detail' question.id %}" class="my-li-a">{{ question.question_text }}</a></li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No polls are available.</p>
+                            {% endif %}
+                          </p>
+                      </div>
+                  </div> <!-- end row-->
+              </div> <!-- end card-body -->
+          </div> <!-- end card -->
+      </div> <!-- end col -->
+</div>
+<!-- container -->
+{% endblock %}
+
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+
+{% extends "polls/base.html" %}
+{% block base %}
+<!-- end page title -->
+<!--                        问题列表-->
+  <div class="row">
+      <div class="col-lg-6 col-xl-3" style="width: 100%">
+          <div class="card">
+              <div class="card-body">
+                  <div class="row align-items-center">
+                      <div class="col-6">
+                          <h1>{{ question.question_text }}</h1>
+
+                            <ul>
+                            {% for choice in question.choice_set.all %}
+                                <li>{{ choice.choice_text }}（{{ choice.votes }} vote{{ choice.votes|pluralize }}）</li>
+                                <div class="progress progress-sm">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ choice.votes }}%;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+
+                                </div>
+                            {% endfor %}
+                            </ul>
+
+                            <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+                      </div>
+                  </div> <!-- end row-->
+              </div> <!-- end card-body -->
+          </div> <!-- end card -->
+      </div> <!-- end col -->
+</div>
+<!-- container -->
+{% endblock %}
+
+
+
