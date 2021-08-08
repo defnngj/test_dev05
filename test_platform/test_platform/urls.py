@@ -16,14 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from demo_app import views
+from api_app.views import ping
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', ping),
     path('hello/', views.hello),
     path('calculator/', views.calculator),
-    path('api/', include('demo_app.urls')),
+    path('demo/', include('demo_app.urls')),
+
+    path('api/', include('api_app.urls')),
 ]
+
 
 
 
