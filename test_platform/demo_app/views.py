@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 
+# from rest_framework.permissions import DjangoModelPermissionsOrAnonReadOnly
 
 # Create your views here.  非常重要一部分：拿到请求 ，处理， 返回接过
 def hello(request):

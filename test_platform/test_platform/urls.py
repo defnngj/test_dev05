@@ -17,16 +17,28 @@ from django.contrib import admin
 from django.urls import path, include
 from demo_app import views
 from api_app.views import ping
+from rest_framework import routers, serializers, viewsets
+from api_app.user_view import UserViewSet
+
+
+# router = routers.DefaultRouter()
+# router.register(r'users', UserViewSet)
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', ping),
+    # path('', ping),
     path('hello/', views.hello),
     path('calculator/', views.calculator),
     path('demo/', include('demo_app.urls')),
 
     path('api/', include('api_app.urls')),
+
+    path('rest/', include('rest_app.urls')),
+
+    # path('', include(router.urls)),
+    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
 ]
 
 
