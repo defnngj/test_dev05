@@ -1,17 +1,17 @@
 from rest_framework import serializers
-from app_api.models.project_model import Project
+from app_api.models import Module
 
 
-class ProjectSerializer(serializers.ModelSerializer):
+class ModuleSerializer(serializers.ModelSerializer):
+    project_name = serializers.CharField(source="project.name")  #反向获取项目的名称
 
     class Meta:
-        model = Project
-        fields = ['name', 'describe', 'status']  # 要显示的字段
+        model = Module
+        fields = ['name', 'describe', 'project_id', "project_name"]  # 要显示的字段
+        # fields = "__all__"
 
-# aatype = [1, 2, 3]
 
-
-class ProjectValidator(serializers.Serializer):
+class ModuleValidator(serializers.Serializer):
     """
     项目的验证器
     """
@@ -20,13 +20,13 @@ class ProjectValidator(serializers.Serializer):
                                                  "invalid": "类型不对",
                                                  "max_length": "长度不能大于50"})
     describe = serializers.CharField(required=False)
-    status = serializers.BooleanField(required=False)
+    project_id = serializers.IntegerField(required=True)
 
     def create(self, validated_data):
         """
         创建
         """
-        project = Project.objects.create(**validated_data)
+        project = Module.objects.create(**validated_data)
         return project
 
     def update(self, instance, validated_data):
@@ -37,7 +37,7 @@ class ProjectValidator(serializers.Serializer):
         """
         instance.name = validated_data.get("name")
         instance.describe = validated_data.get("describe")
-        instance.status = validated_data.get("status")
+        instance.project_id = validated_data.get("project_id")
         instance.save()
         return instance
 
