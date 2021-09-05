@@ -15,7 +15,6 @@ class CaseSerializer(serializers.ModelSerializer):
         model = TestCase
         fields = ['name', 'url', 'method', 'header', 'params_type', 'params_body',
                   'result', 'assert_type', 'assert_text', 'module_id', "module_name"]  # 要显示的字段
-        # fields = "__all__"
 
 
 class CaseValidator(serializers.Serializer):
@@ -56,9 +55,16 @@ class CaseValidator(serializers.Serializer):
         instance - 更新的对象 - 从数据库里查出来的
         validated_data - 更新的数据 - 从request 里面
         """
-        # instance.name = validated_data.get("name")
-        # instance.describe = validated_data.get("describe")
-        # instance.project_id = validated_data.get("project_id")
+        instance.url = validated_data.get('url')
+        instance.method = validated_data.get('method')
+        instance.header = validated_data.get('header')
+        instance.params_type = validated_data.get('params_type')
+        instance.params_body = validated_data.get('params_body')
+        instance.result = validated_data.get('result')
+        instance.assert_type = validated_data.get('assert_type')
+        instance.assert_text = validated_data.get('assert_text')
+        instance.module_id = validated_data.get('module_id')
+        instance.name = validated_data.get('name')
         instance.save()
         return instance
 
@@ -72,10 +78,8 @@ class DebugValidator(serializers.Serializer):
     method = serializers.ChoiceField(required=True, choices=CaseData.methods,
                                      error_messages={"required": "method不能为空",
                                                      "invalid_choice": "只支持GET/POST/DELETE/PUT类型"})
-    header = serializers.JSONField(required=True, error_messages={"required": "header不能为空，而且JSON格式"})
+    header = serializers.JSONField(required=True, error_messages={"required": "header不能为空"})
     params_type = serializers.ChoiceField(required=True, choices=CaseData.params_type,
                                           error_messages={"required": "params_type不能为空",
                                                           "invalid_choice": "只支持params/form/json类型"})
-    params_body = serializers.CharField(required=True, error_messages={"required": "params_body不能为空，而且JSON格式"})
-
-
+    params_body = serializers.JSONField(required=True, error_messages={"required": "params_body不能为空"})

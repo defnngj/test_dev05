@@ -1,10 +1,11 @@
+import json
 from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from app_common.utils.response import Error
 
 
-class BaseResponse:
+class BaseView:
 
     def response_fail(self, error=""):
         """
@@ -36,11 +37,28 @@ class BaseResponse:
             },
             "data": data
         }
-        print("---->", resp)
         return Response(resp)
 
+    @staticmethod
+    def json_to_dict(json_str):
+        """
+        json to dict
+        """
+        if json_str == "":
+            ret = dict()
+            return ret
 
-class BaseAPIView(APIView, BaseResponse, Error):
+        try:
+            ret = json.loads(json_str)
+            if isinstance(ret, dict) is False:
+                return None
+        except json.decoder.JSONDecodeError as e:
+            print("error", e)
+            return None
+        return ret
+
+
+class BaseAPIView(APIView, BaseView, Error):
     """
     继承APIView，
     Response：自定义返回格式
@@ -49,7 +67,7 @@ class BaseAPIView(APIView, BaseResponse, Error):
     pass
 
 
-class BaseViewSet(ViewSet, BaseResponse, Error):
+class BaseViewSet(ViewSet, BaseView, Error):
     """
     继承ViewSet，
     Response：自定义返回格式

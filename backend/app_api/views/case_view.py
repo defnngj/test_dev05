@@ -64,7 +64,17 @@ class CaseViewSet(BaseViewSet):
         更新一条用例
         api/v1/case/<pk>/update
         """
-        return self.response()
+        cid = request.data.get("id")
+        if cid is None:
+            return self.response(error=self.CASE_ID_NULL)
+        case = TestCase.objects.get(pk=cid, is_delete=False)
+        val = CaseValidator(instance=case, data=request.data)
+        if val.is_valid():
+            val.save()
+        else:
+            return self.response_fail(val.errors)
+
+        return self.response(data=val.data)
 
     @action(methods=["delete"], detail=True, url_path="delete")
     def delete_case(self, request, *args, **kwargs):
@@ -72,6 +82,13 @@ class CaseViewSet(BaseViewSet):
         删除一条用例
         api/v1/case/<pk>/delete
         """
+        pk = kwargs.get("pk")
+        if pk is None:
+            return self.response(error=self.CASE_ID_NULL)
+        case = TestCase.objects.filter(id=pk, is_delete=False).update(is_delete=True)
+        if case == 0:
+            return self.response(error=self.CASE_OBJECT_NULL)
+
         return self.response()
 
     @action(methods=["post"], detail=False, url_path="debug")
@@ -85,28 +102,21 @@ class CaseViewSet(BaseViewSet):
             return self.response_fail(error=val.errors)
         url = request.data.get("url")
         method = request.data.get("method")
-        header = request.data.get("header", "")
+        header = request.data.get("header", "{}")
         params_type = request.data.get("params_type")
-        params_body = request.data.get("params_body", "")
-        if header == "":
-            header = {}
-        else:
-            try:
-                header = json.loads(header)
-            except json.decoder.JSONDecodeError:
-                return self.response(error=self.CASE_HEADER_ERROR)
+        params_body = request.data.get("params_body", "{}")
 
-        if params_body == "":
-            params_body = {}
-        else:
-            try:
-                params_body = json.loads(params_body)
-            except json.decoder.JSONDecodeError:
-                return self.response(error=self.CASE_PARAMS_BODY_ERROR)
+        header = self.json_to_dict(header)
+        if header is None:
+            return self.response(error=self.JSON_TYPE_ERROR)
+
+        params_body = self.json_to_dict(params_body)
+        if params_body is None:
+            return self.response(error=self.JSON_TYPE_ERROR)
 
         ret_text = "null"
         if method == "GET":
-           ret_text = requests.get(url, headers=header, params=params_body)
+            ret_text = requests.get(url, headers=header, params=params_body)
 
         if method == "POST":
             if params_type == "data":
@@ -114,8 +124,19 @@ class CaseViewSet(BaseViewSet):
             if params_type == "json":
                 ret_text = requests.post(url, headers=header, json=params_body)
 
-        return self.response(data=ret_text)
+        if method == "PUT":
+            if params_type == "data":
+                ret_text = requests.put(url, headers=header, data=params_body)
+            if params_type == "json":
+                ret_text = requests.put(url, headers=header, json=params_body)
 
+        if method == "DELETE":
+            if params_type == "data":
+                ret_text = requests.delete(url, headers=header, data=params_body)
+            if params_type == "json":
+                ret_text = requests.delete(url, headers=header, json=params_body)
+
+        return self.response(data=ret_text)
 
     @action(methods=["post"], detail=False, url_path="assert")
     def assert_case(self, request, *args, **kwargs):

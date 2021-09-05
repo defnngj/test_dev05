@@ -9,6 +9,7 @@ class Error:
     USER_OR_PAWD_ERROR = {"10011": "用户名密码错误"}
 
     ParamsTypeError = {"30020": "参数类型错误"}
+    JSON_TYPE_ERROR = {"30030": "JSON格式错误"}
 
     USER_ID_NULL = {"40010": "用户id不存在"}
 
