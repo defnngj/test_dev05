@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
+from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from app_common.utils.response import Error
 
 
-class BaseAPIView(APIView, Error):
+class BaseResponse:
 
     def response_fail(self, error=""):
         """
@@ -35,6 +36,25 @@ class BaseAPIView(APIView, Error):
             },
             "data": data
         }
+        print("---->", resp)
         return Response(resp)
+
+
+class BaseAPIView(APIView, BaseResponse, Error):
+    """
+    继承APIView，
+    Response：自定义返回格式
+    Error: 自定义错误信息
+    """
+    pass
+
+
+class BaseViewSet(ViewSet, BaseResponse, Error):
+    """
+    继承ViewSet，
+    Response：自定义返回格式
+    Error: 自定义错误信息
+    """
+    pass
 
 

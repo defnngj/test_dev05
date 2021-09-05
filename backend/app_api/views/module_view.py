@@ -36,6 +36,7 @@ class ModuleView(BaseAPIView):
     def post(self, request, *args, **kwargs):
         """
         添加项目
+        /module/abc/
         """
         val = ModuleValidator(data=request.data)
         if val.is_valid():  # 判断验证的字段是否都对
@@ -71,6 +72,7 @@ class ModuleView(BaseAPIView):
         """
         mid = kwargs.get("pk")
         if mid is not None:  # 查询单条数据
+
             module = Module.objects.filter(pk=mid, is_delete=False).update(is_delete=True)
             if module == 0:
                 return self.response(error=self.MODULE_DELETE_ERROR)
@@ -78,9 +80,12 @@ class ModuleView(BaseAPIView):
         return self.response()
 
 
+class ModuleTreeView(BaseAPIView):
 
-
-
+    def get(self, request,  *args, **kwargs):
+        """
+        获取模块树：项目->模块
+        """
 
 
 

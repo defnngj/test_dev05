@@ -22,6 +22,8 @@ class Error:
 
     CASE_ID_NULL = {"10040": "用例id不存在"}
     CASE_OBJECT_NULL = {"10041": "通过id查询用例不存在"}
+    CASE_HEADER_ERROR = {"10042": "header类型错误，不是json"}
+    CASE_PARAMS_BODY_ERROR = {"10043": "params_body类型错误，不是json"}
 
 
 def response_fail(error=""):
