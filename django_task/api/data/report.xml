@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite name="MyTest-20210912173220" tests="3" file=".py" time="2.182" timestamp="2021-09-12T17:32:23" failures="0" errors="0" skipped="0">
+		<testcase classname="MyTest" name="test_case_00001_case001" time="0.553" timestamp="2021-09-12T17:32:21" file="api\tests.py" line="24">
+			<!--test_case_00001_case001-->
+		</testcase>
+		<testcase classname="MyTest" name="test_case_00002_case002" time="0.555" timestamp="2021-09-12T17:32:22" file="api\tests.py" line="24">
+			<!--test_case_00002_case002-->
+		</testcase>
+		<testcase classname="MyTest" name="test_case_00003_case003" time="1.073" timestamp="2021-09-12T17:32:23" file="api\tests.py" line="24">
+			<!--test_case_00003_case003-->
+		</testcase>
+	</testsuite>
+</testsuites>

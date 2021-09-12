@@ -1,0 +1,26 @@
+{
+  "case001": {
+    "url": "http://httpbin.org/post",
+    "method": "POST",
+    "params_type": "json",
+    "params_body": {
+      "id": 11
+    }
+  },
+  "case002": {
+    "url": "http://httpbin.org/post",
+    "method": "POST",
+    "params_type": "data",
+    "params_body": {
+      "name": "tom"
+    }
+  },
+  "case003": {
+    "url": "https://httpbin.org/get",
+    "method": "GET",
+    "params_type": "params",
+    "params_body": {
+      "key": "value"
+    }
+  }
+}
