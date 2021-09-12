@@ -17,7 +17,7 @@ class BaseView:
         return self.response(success=False, error=error_msg, data=[])
 
     @staticmethod
-    def response(success: bool = True, error={}, data: any = []) -> Response:
+    def response(success: bool = True, message: str = "", error={}, data: any = []) -> Response:
         """
         自定义接口返回格式
         """
@@ -31,6 +31,7 @@ class BaseView:
 
         resp = {
             "success": success,
+            "message": message,
             "error": {
                 "code": error_code,
                 "message": error_msg

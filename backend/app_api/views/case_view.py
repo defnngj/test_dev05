@@ -1,10 +1,10 @@
 import requests
-import json
 from rest_framework.decorators import action
 from app_common.utils.base_view import BaseViewSet
 from app_common.utils.pagination import Pagination
-from app_api.serializer.case import CaseValidator, CaseSerializer, DebugValidator
-from app_api.models import TestCase
+from app_api.serializer.case import CaseValidator, CaseSerializer, DebugValidator, AssertValidator
+from app_api.models import Project, Module, TestCase
+from app_api.serializer.config import AssertType, MethodType, ParamsType
 
 
 class CaseViewSet(BaseViewSet):
@@ -115,25 +115,25 @@ class CaseViewSet(BaseViewSet):
             return self.response(error=self.JSON_TYPE_ERROR)
 
         ret_text = "null"
-        if method == "GET":
+        if method == MethodType.get:
             ret_text = requests.get(url, headers=header, params=params_body)
 
-        if method == "POST":
-            if params_type == "data":
+        if method == MethodType.post:
+            if params_type == ParamsType.data:
                 ret_text = requests.post(url, headers=header, data=params_body)
-            if params_type == "json":
+            if params_type == ParamsType.json:
                 ret_text = requests.post(url, headers=header, json=params_body)
 
-        if method == "PUT":
-            if params_type == "data":
+        if method == MethodType.put:
+            if params_type == ParamsType.data:
                 ret_text = requests.put(url, headers=header, data=params_body)
-            if params_type == "json":
+            if params_type == ParamsType.json:
                 ret_text = requests.put(url, headers=header, json=params_body)
 
-        if method == "DELETE":
-            if params_type == "data":
+        if method == MethodType.delete:
+            if params_type == ParamsType.data:
                 ret_text = requests.delete(url, headers=header, data=params_body)
-            if params_type == "json":
+            if params_type == ParamsType.json:
                 ret_text = requests.delete(url, headers=header, json=params_body)
 
         return self.response(data=ret_text)
@@ -144,18 +144,64 @@ class CaseViewSet(BaseViewSet):
         删除一条用例
         api/v1/case/assert/
         """
+        val = AssertValidator(data=request.data)
+        if val.is_valid() is False:  # 判断验证的字段是否都对
+            return self.response_fail(error=val.errors)
+        result = request.data.get("result")
+        assert_type = request.data.get("assert_type")
+        assert_text = request.data.get("assert_text")
+        if assert_type == AssertType.include:
+            if assert_text in result:
+                return self.response(message="断言包含成功")
+            else:
+                return self.response(error=self.ASSERT_INCLUDE_FAIL)
+        elif assert_type == AssertType.equal:
+            if assert_text == result:
+                return self.response(message="断言相等成功")
+            else:
+                return self.response(error=self.ASSERT_EQUAL_FAIL)
+
         return self.response()
 
     @action(methods=["get"], detail=False, url_path="tree")
     def get_case_tree(self, request, *args, **kwargs):
         """
         获取用例的树：项目-> 模型 -> 用例
-        api/v1/case/<case_id>/
+        api/v1/case/tree/
         """
-        print(request)
-        print(args)
-        print(kwargs)
-        return self.response()
+        projects = Project.objects.filter(is_delete=False)
+        data = []
+        for project in projects:
+            print("project", project.name)
+            project_info = {
+                "name": project.name,
+                "isParent": True,
+                "children": []
+            }
+
+            modules = Module.objects.filter(is_delete=False, project_id=project.id)
+            for module in modules:
+                module_info = {
+                    "name": module.name,
+                    "isParent": True,
+                    "children": []
+                }
+
+                cases = TestCase.objects.filter(is_delete=False, module_id=module.id)
+                for case in cases:
+                    case_info = {
+                        "name": case.name,
+                        "isParent": False,
+                    }
+                    module_info["children"].append(case_info)
+
+                project_info["children"].append(module_info)
+
+            data.append(project_info)
+
+        return self.response(data=data)
+
+
 
 
 
