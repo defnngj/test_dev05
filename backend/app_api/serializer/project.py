@@ -22,6 +22,13 @@ class ProjectValidator(serializers.Serializer):
     describe = serializers.CharField(required=False)
     status = serializers.BooleanField(required=False)
 
+    def validate_name(self, value):
+        """ 验证项目名称不能重复 """
+        project = Project.objects.filter(name=value).count()
+        if project > 0:
+            raise serializers.ValidationError("项目名称已经存在")
+        return value
+
     def create(self, validated_data):
         """
         创建

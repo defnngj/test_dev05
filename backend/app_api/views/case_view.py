@@ -200,9 +200,3 @@ class CaseViewSet(BaseViewSet):
             data.append(project_info)
 
         return self.response(data=data)
-
-
-
-
-
-
