@@ -28,6 +28,9 @@ class Error:
     ASSERT_INCLUDE_FAIL = {"10044": "断言包含失败"}
     ASSERT_EQUAL_FAIL = {"10045": "断言相等失败"}
 
+    CASE_TYPE_ERROR = {"10051", "cases类型错误"}
+    TASK_ID_NULL = {"10051", "task ID不存在"}
+
 
 def response_fail(error=""):
     """

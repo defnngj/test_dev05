@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite name="MyTest-20211010163743" tests="2" file=".py" time="0.530" timestamp="2021-10-10T16:37:44" failures="1" errors="0" skipped="0">
+		<testcase classname="MyTest" name="test_case_00002_case2" time="0.003" timestamp="2021-10-10T16:37:44" file="app_api\running_tests.py" line="65">
+			<!--test_case_00002_case2-->
+			<system-out><![CDATA[url http://httpbin.org/post
+method POST
+header {}
+params_type form
+params_body {'info': 'post interface'}
+assert_type include
+assert_text post interface
+error Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+]]></system-out>
+		</testcase>
+		<testcase classname="MyTest" name="test_case_00001_case1" time="0.527" timestamp="2021-10-10T16:37:44" file="app_api\running_tests.py" line="65">
+			<!--test_case_00001_case1-->
+			<failure type="AssertionError" message="'httpbin.org' not found in &lt;Response [200]&gt;"><![CDATA[Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 182, in wrapper
+    return func(self, *args, **kwargs)
+  File "D:\class_dev\test_dev05\backend\app_api\running_tests.py", line 86, in test_case
+    self.assertIn(assert_text, ret_text)
+AssertionError: 'httpbin.org' not found in <Response [200]>
+]]></failure>
+			<system-out><![CDATA[url http://httpbin.org/get
+method GET
+header {}
+params_type params
+params_body {}
+assert_type include
+assert_text httpbin.org
+]]></system-out>
+		</testcase>
+	</testsuite>
+</testsuites>

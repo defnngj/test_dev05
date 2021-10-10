@@ -4,6 +4,7 @@ from app_api.views.project_view import ProjectView
 from app_api.views.module_view import ModuleView
 from app_api.views.module_view import ModuleTreeView
 from app_api.views.case_view import CaseViewSet
+from app_api.views.task_view import TaskViewSet
 
 
 url_path = [
@@ -17,6 +18,7 @@ url_path = [
 
 router = routers.SimpleRouter()
 router.register(r'v1/case', CaseViewSet)  # 用例管理
+router.register(r'v1/task', TaskViewSet)  # 用例管理
 
 urlpatterns = url_path + router.urls
 
