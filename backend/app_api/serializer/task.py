@@ -1,6 +1,6 @@
 import json
 from rest_framework import serializers
-from app_api.models import TestCase, TestTask
+from app_api.models import TestCase, TestTask, TaskCaseRelevance
 from app_api.serializer.config import CaseDataList
 from app_common.utils.base_serializer import check_json
 
@@ -31,18 +31,29 @@ class TaskValidator(serializers.Serializer):
                                                  "max_length": "长度不能大于50"})
     describe = serializers.CharField(required=False)
     status = serializers.BooleanField(required=False)
-    cases = serializers.CharField(required=True, error_messages={"required": "case不能为空"})
+    cases = serializers.ListField(required=True, error_messages={"required": "case不能为空"})
+
+    def validate_cases(self, value):
+        """ 验证cases是否为list格式 """
+        if len(value) == 0:
+            raise serializers.ValidationError("cases不能为空list")
+        return value
 
     def create(self, validated_data):
         """
-        创建用例
+        创建任务
         """
-        task = TestTask.objects.create(**validated_data)
+        name = validated_data.get('name')
+        describe = validated_data.get('describe')
+        status = validated_data.get('status', True)
+        task = TestTask.objects.create(name=name, describe=describe, status=status)
+        for case in validated_data.get('cases'):
+            TaskCaseRelevance.objects.create(task_id=task.id, case_id=case)
         return task
 
     def update(self, instance, validated_data):
         """
-        更新
+        更新任务
         instance - 更新的对象 - 从数据库里查出来的
         validated_data - 更新的数据 - 从request 里面
         """

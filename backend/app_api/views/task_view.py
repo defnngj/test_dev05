@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from app_common.utils.base_view import BaseViewSet
 from app_common.utils.pagination import Pagination
 from app_api.serializer.task import TaskValidator
-from app_api.models import Project, Module, TestTask, TestCase, TestResult
+from app_api.models import Project, Module, TestTask, TestCase, TestResult, TaskCaseRelevance
 from app_api.serializer.config import AssertType, MethodType, ParamsType
 from app_api.tasks import running
 from app_common.utils.response import Error
@@ -22,19 +22,9 @@ class TaskViewSet(BaseViewSet):
     @action(methods=["post"], detail=False, url_path="create")
     def create_task(self, request, *args, **kwargs):
         """
-        创建一条用例
-        api/v1/case/create
+        创建一条任务
+        api/v1/task/create
         """
-        cases = request.data.get("cases")
-        print("cases", cases)
-        if isinstance(cases, list) is True:
-            if len(cases) == 0:
-                return self.response(error=Error.CASE_HEADER_ERROR)
-            else:
-                request.data["cases"] = str(cases)
-        else:
-            return self.response(error=Error.CASE_HEADER_ERROR)
-
         val = TaskValidator(data=request.data)
         if val.is_valid():  # 判断验证的字段是否都对
             val.save()  # 保存这个数据

@@ -1,4 +1,5 @@
 from django.db import models
+from app_api.models.case_model import TestCase
 
 
 class TestTask(models.Model):
@@ -8,13 +9,22 @@ class TestTask(models.Model):
     name = models.CharField("名称", max_length=100, blank=False, default="")
     describe = models.TextField("描述", null=True, default="")
     status = models.IntegerField("状态", default=0)  # 未执行、执行中、执行完成、排队中
-    cases = models.TextField("关联用例", default="")  # "[1,2,3,4]"
+    # cases = models.TextField("关联用例", default="")  # "[1,2,3,4]"
     is_delete = models.BooleanField("删除", default=False)
     create_time = models.DateTimeField("创建时间", auto_now_add=True)
     update_time = models.DateTimeField("创建时间", auto_now=True)
 
     def __str__(self):
         return self.name
+
+
+class TaskCaseRelevance(models.Model):
+    """
+    任务用例关联表
+    """
+    task = models.ForeignKey(TestTask, on_delete=models.CASCADE)
+    case = models.ForeignKey(TestCase, on_delete=models.CASCADE)
+    create_time = models.DateTimeField("创建时间", auto_now_add=True)
 
 
 class TestResult(models.Model):
