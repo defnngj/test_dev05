@@ -10,6 +10,7 @@ from app_api.serializer.config import AssertType, MethodType, ParamsType
 from app_api.tasks import running
 from app_common.utils.response import Error
 from backend.settings import BASE_DIR
+from app_api.task_thread import TaskThread
 
 
 DATA_FILE_PATH = os.path.join(BASE_DIR, "app_api", "data", "test_data.json")
@@ -105,41 +106,20 @@ class TaskViewSet(BaseViewSet):
         """
         运行测试任务
         /api/interface/v1/task/<pk>/running/
-
-        todo:
-        1.记录任务状态
-        2.读取xml文件的内容，写入表
         """
-        pk = kwargs.get("pk")
-        if pk is not None:
+        tid = kwargs.get("pk")
+        if tid is not None:
             try:
-                task = TestTask.objects.get(id=pk, is_delete=False)
+                task = TestTask.objects.get(pk=tid, is_delete=False)
+                ser = TaskSerializer(instance=task, many=False)
             except TestTask.DoesNotExist:
-                return self.response(error=Error.TASK_ID_NULL)
-            print("case list--> ", task.cases)
-            b = task.cases.replace("]", "")
-            c = b.replace("[", "")
-            case_list = c.split(",")
+                return self.response(error=self.TASK_OBJECT_NULL)
 
+            case_list = ser.data.get("cases", [])
+            # running.delay()
+            TaskThread(tid, case_list).run()
             print("case list-->", case_list)
-            cases_dict = {}
-            for case in case_list:
-                case = TestCase.objects.get(id=int(case))
-                cases_dict["case" + str(case.id)] = {
-                    "url": case.url,
-                    "method": case.method,
-                    "header": case.header,
-                    "params_type": case.params_type,
-                    "params_body": case.params_body,
-                    "assert_type": case.assert_type,
-                    "assert_text": case.assert_text
-                }
 
-            cases_json = json.dumps(cases_dict)
-            with(open(DATA_FILE_PATH, "w")) as f:
-                f.write(cases_json)
-
-        running.delay()
         return self.response()
 
 

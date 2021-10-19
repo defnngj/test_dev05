@@ -141,7 +141,7 @@ class CaseViewSet(BaseViewSet):
     @action(methods=["post"], detail=False, url_path="assert")
     def assert_case(self, request, *args, **kwargs):
         """
-        删除一条用例
+        断言用例
         api/v1/case/assert/
         """
         val = AssertValidator(data=request.data)

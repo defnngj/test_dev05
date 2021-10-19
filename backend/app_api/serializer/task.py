@@ -13,7 +13,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestTask
-        fields = ['name', 'describe', 'status', 'cases']  # 要显示的字段
+        fields = ['id', 'name', 'describe', 'status', 'cases']  # 要显示的字段
 
     def get_cases(self, testtask_obj):
         """查询task关联的case id list"""
@@ -34,7 +34,9 @@ class TaskValidator(serializers.Serializer):
                                                  "max_length": "长度不能大于50"})
     describe = serializers.CharField(required=False)
     status = serializers.BooleanField(required=False)
-    cases = serializers.ListField(required=True, error_messages={"required": "case不能为空"}, write_only=True)
+    cases = serializers.ListField(required=False,
+                                  error_messages={"required": "case不能为空"},
+                                  write_only=True)
 
     def validate_cases(self, value):
         """ 验证cases是否为list格式 """
@@ -51,7 +53,7 @@ class TaskValidator(serializers.Serializer):
         status = validated_data.get('status', True)
         # 创建关联数据
         task = TestTask.objects.create(name=name, describe=describe, status=status)
-        for case in validated_data.get('cases'):
+        for case in validated_data.get('cases', []):
             TaskCaseRelevance.objects.create(task_id=task.id, case_id=case)
         return task
 
@@ -66,7 +68,7 @@ class TaskValidator(serializers.Serializer):
         instance.status = validated_data.get('status', True)
         # 删除任务关联数据，重新创建
         TaskCaseRelevance.objects.filter(task_id=instance.id).delete()
-        for case in validated_data.get('cases'):
+        for case in validated_data.get('cases', []):
             TaskCaseRelevance.objects.create(task_id=instance.id, case_id=case)
         instance.save()
         return instance

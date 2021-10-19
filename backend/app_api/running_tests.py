@@ -52,7 +52,7 @@ def json_to_dict(json_str):
 
 
 @ddt
-class MyTest(unittest.TestCase):
+class RunTest(unittest.TestCase):
     """
     "url": "http://httpbin.org/get",
     "method": "GET",
