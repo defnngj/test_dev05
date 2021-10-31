@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Porject from '../components/Porject.vue'
+import Project from '../components/project/Project.vue'
 import Module from '../components/Module.vue'
 import testCase from '../components/testCase.vue'
 import testTask from '../components/testTask.vue'
@@ -11,8 +11,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Porject',
-    component: Porject
+    name: 'Project',
+    component: Project
   },
   {
     path: '/module',

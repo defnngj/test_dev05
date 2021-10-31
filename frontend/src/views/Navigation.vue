@@ -5,10 +5,8 @@
         <!-- <h1>重定向</h1> -->
         <img class="logo" alt="itest logo" src="../assets/itestLogo.png" />
         <el-menu
-          default-active="2"
+          default-active="onRoutes"
           class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose"
           background-color="#545c64"
           text-color="#fff"
           active-text-color="#ffd04b"
@@ -63,6 +61,18 @@
 
 <script>
 export default {
+  computed: {
+    onRoutes() {
+      if (this.$route.path === '/module') {
+        return '2'
+      } else if (this.$route.path === '/case') {
+        return '3'
+      } else if (this.$route.path === '/task') {
+        return '4'
+      } 
+      return '1'
+    }
+  },
   data() {
     const item = {
       date: "2016-05-02",
@@ -78,7 +88,7 @@ export default {
 
 <style>
 .navigation {
-  height: 100%;
+  height: 800px;
 }
 
 .nav {

@@ -5,7 +5,6 @@
       <!-- <router-link to="/about">About</router-link> -->
       <Navigation></Navigation>
     </div>
-    <router-view/>
   </div>
 </template>
 
