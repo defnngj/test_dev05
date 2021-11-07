@@ -1,22 +1,22 @@
 <template>
   <div class="project-dialog">
-    <el-dialog title="创建项目" :visible.sync="showStatus" @close="cancelProject()">
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="名称">
+    <el-dialog :title=showTitle :visible.sync="showStatus" @close="cancelProject()">
+      <el-form :rules="rules" ref="form" :model="form" label-width="80px">
+        <el-form-item label="名称" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input type="textarea" v-model="form.desc"></el-input>
+          <el-input type="textarea" v-model="form.describe"></el-input>
         </el-form-item>
         <el-form-item label="状态">
           <span style="float: left;">
-            <el-switch v-model="form.delivery"></el-switch>
+            <el-switch v-model="form.status"></el-switch>
           </span>
         </el-form-item>
         <el-form-item>
           <div class="dialog-footer">
             <el-button @click="cancelProject()">取消</el-button>
-            <el-button type="primary" @click="onSubmit()">创建</el-button>
+            <el-button type="primary" @click="onSubmit('form')">保存</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -25,22 +25,36 @@
 </template>
 
 <script>
-// import ProjectApi from '../../request/project'
+  import ProjectApi from '../../request/project'
 
   export default {
-    props: [],
+    props: ['pid'],
     data(){
       return {
         showStatus: true,
+        showTitle: '',
         form: {
           name: '',
-          desc: '',
-          delivery: true
-        }, 
+          describe: '',
+          status: true
+        },
+         rules: {
+          name: [
+            { required: true, message: '请输入项目名称', trigger: 'blur' }
+          ]
+         }
       }
     },
     created() {
-      console.log("自动被执行created")
+      console.log("自动被执行created--->", this.pid)
+      if (this.pid === 0) {
+        console.log("创建", this.pid)
+        this.showTitle = "创建项目"
+      } else {
+        console.log("编辑", this.pid)
+        this.showTitle = "编辑项目"
+        this.getProject()
+      }
       console.log("子组件", this.showStatus)
     },
     mounted() {
@@ -48,6 +62,19 @@
     //   this.initProject()
     },
     methods: {
+
+      // 获取一条项目信息
+      async getProject() {
+        const resp = await ProjectApi.getProject(this.pid)
+        console.log("resp--->", resp)
+        if (resp.success == true) {
+          console.log("success")
+          this.form = resp.data
+        } else {
+          this.$message.error(resp.error.message);
+        }
+      },
+
       // 关闭dialog
       cancelProject() {
         console.log("我把自己关闭了")
@@ -55,9 +82,39 @@
       },
 
       // 创建项目按钮
-      onSubmit() {
-        console.log("创建额")
-      }
+      onSubmit(formName) {
+         this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if(this.pid === 0) {
+              console.log("创建 - 保存")
+              ProjectApi.createProject(this.form).then(resp => {
+                if (resp.success == true) {
+                  console.log("success")
+                  this.$message.success("创建成功！")
+                  this.cancelProject()
+                } else {
+                  this.$message.error("创建失败！");
+                }
+              })
+            } else {
+              console.log("编辑 - 保存")
+              ProjectApi.updateProject(this.pid, this.form).then(resp => {
+                if (resp.success == true) {
+                  console.log("success")
+                  this.$message.success("更新成功！")
+                  this.cancelProject()
+                } else {
+                  this.$message.error("更新失败！");
+                }
+              })
+            }
+            
+          } else {
+            return false;
+          }
+        });
+        
+      },
 
     }
 

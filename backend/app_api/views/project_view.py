@@ -10,7 +10,7 @@ from app_common.utils.token_auth import TokenAuthentication
 
 
 class ProjectView(BaseAPIView):
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = []
 
     def get(self, request, *args, **kwargs):
         """
@@ -28,7 +28,7 @@ class ProjectView(BaseAPIView):
 
                 return self.response(error=self.PROJECT_OBJECT_NULL)
             return self.response(data=ser.data)
-        else:   # 查询一组数据
+        else:   # 查询all数据
             project = Project.objects.filter(is_delete=False).all()
             pg = Pagination()
             page_data = pg.paginate_queryset(queryset=project, request=request, view=self)

@@ -6,21 +6,21 @@ class ProjectApi {
       return request.get('/v1/project/', data)
     }
 
-    // getProject(pid) {
-    //   return request.get('/api/v1/project/detail', { id: pid })
-    // }
+    getProject(pid) {
+      return request.get('/v1/project/'+pid+'/')
+    }
 
-    // deleteProject(pid) {
-    //   return request.delete('/api/v1/project/delete', { id: pid })
-    // }
+    deleteProject(pid) {
+      return request.delete('/v1/project/'+pid+'/')
+    }
   
-    // createProject(data) {
-    //   return request.post('/api/v1/project/create', data)
-    // }
+    createProject(data) {
+      return request.post('/v1/project/', data)
+    }
   
-    // updateProject(data) {
-    //   return request.put('/api/v1/project/update', data)
-    // }
+    updateProject(pid, data) {
+      return request.put('/v1/project/'+pid+'/', data)
+    }
   
   }
   

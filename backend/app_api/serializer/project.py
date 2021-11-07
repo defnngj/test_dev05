@@ -6,7 +6,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Project
-        fields = ['name', 'describe', 'status']  # 要显示的字段
+        fields = ['id', 'name', 'describe', 'status']  # 要显示的字段
 
 # aatype = [1, 2, 3]
 
@@ -22,12 +22,12 @@ class ProjectValidator(serializers.Serializer):
     describe = serializers.CharField(required=False)
     status = serializers.BooleanField(required=False)
 
-    def validate_name(self, value):
-        """ 验证项目名称不能重复 """
-        project = Project.objects.filter(name=value).count()
-        if project > 0:
-            raise serializers.ValidationError("项目名称已经存在")
-        return value
+    # def validate_name(self, value):
+    #     """ 验证项目名称不能重复 """
+    #     project = Project.objects.filter(name=value).count()
+    #     if project > 0:
+    #         raise serializers.ValidationError("项目名称已经存在")
+    #     return value
 
     def create(self, validated_data):
         """
