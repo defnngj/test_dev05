@@ -26,8 +26,8 @@ class ProjectView(BaseAPIView):
             except Project.DoesNotExist:
                 # return response(error=Error.PROJECT_OBJECT_NULL)
 
-                return self.response(error=self.PROJECT_OBJECT_NULL)
-            return self.response(data=ser.data)
+                return self.response_success(error=self.PROJECT_OBJECT_NULL)
+            return self.response_success(data=ser.data)
         else:   # 查询all数据
             project = Project.objects.filter(is_delete=False).all()
             pg = Pagination()
@@ -39,7 +39,7 @@ class ProjectView(BaseAPIView):
                 "size": int(size),
                 "projectList": ser.data
             }
-            return self.response(data=data)
+            return self.response_success(data=data)
 
     def post(self, request, *args, **kwargs):
         """
@@ -50,7 +50,7 @@ class ProjectView(BaseAPIView):
             val.save()  # 保存这个数据
         else:
             return self.response_fail(error=val.errors)
-        return self.response()
+        return self.response_success()
 
     def put(self, request, *args, **kwargs):
         """
@@ -60,18 +60,18 @@ class ProjectView(BaseAPIView):
         if pid is None:
             pid = request.data.get("id", "")
             if pid == "":
-                return self.response(error=self.PROJECT_ID_NULL)
+                return self.response_success(error=self.PROJECT_ID_NULL)
         try:
            project = Project.objects.get(pk=pid, is_delete=False)
         except Project.DoesNotExist:
-            return self.response(error=self.PROJECT_OBJECT_NULL)
+            return self.response_success(error=self.PROJECT_OBJECT_NULL)
         # 更新
         val = ProjectValidator(instance=project, data=request.data)
         if val.is_valid():  # 判断验证的字段是否都对
             val.save()  # 保存这个数据
         else:
             return self.response_fail(error=val.errors)
-        return self.response()
+        return self.response_success()
 
     def delete(self, request, *args, **kwargs):
         """
@@ -81,9 +81,9 @@ class ProjectView(BaseAPIView):
         if pid is not None:  # 查询单条数据
             project = Project.objects.filter(pk=pid, is_delete=False).update(is_delete=True)
             if project == 0:
-                return self.response(error=self.PROJECT_DELETE_ERROR)
+                return self.response_success(error=self.PROJECT_DELETE_ERROR)
 
-        return self.response()
+        return self.response_success()
 
 
 

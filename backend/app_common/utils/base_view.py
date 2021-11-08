@@ -14,10 +14,10 @@ class BaseView:
         error_msg = {
             "30010": str(error)
         }
-        return self.response(success=False, error=error_msg, data=[])
+        return self.response_success(success=False, error=error_msg, data=[])
 
     @staticmethod
-    def response(success: bool = True, message: str = "", error={}, data: any = []) -> Response:
+    def response_success(success: bool = True, message: str = "", error={}, data: any = []) -> Response:
         """
         自定义接口返回格式
         """

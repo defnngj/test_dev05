@@ -22,8 +22,8 @@ class CaseViewSet(BaseViewSet):
             case = TestCase.objects.get(pk=cid, is_delete=False)
             ser = CaseSerializer(instance=case, many=False)
         except TestCase.DoesNotExist:
-            return self.response(error=self.CASE_OBJECT_NULL)
-        return self.response(data=ser.data)
+            return self.response_success(error=self.CASE_OBJECT_NULL)
+        return self.response_success(data=ser.data)
 
     @action(methods=["get"], detail=False, url_path="list")
     def get_cases_list(self, request, *args, **kwargs):
@@ -43,7 +43,7 @@ class CaseViewSet(BaseViewSet):
             "size": int(size),
             "caseList": ser.data
         }
-        return self.response(data=data)
+        return self.response_success(data=data)
 
     @action(methods=["post"], detail=False, url_path="create")
     def create_case(self, request, *args, **kwargs):
@@ -56,7 +56,7 @@ class CaseViewSet(BaseViewSet):
             val.save()  # 保存这个数据
         else:
             return self.response_fail(error=val.errors)
-        return self.response()
+        return self.response_success()
 
     @action(methods=["put"], detail=True, url_path="update")
     def update_case(self, request, *args, **kwargs):
@@ -66,7 +66,7 @@ class CaseViewSet(BaseViewSet):
         """
         cid = request.data.get("id")
         if cid is None:
-            return self.response(error=self.CASE_ID_NULL)
+            return self.response_success(error=self.CASE_ID_NULL)
         case = TestCase.objects.get(pk=cid, is_delete=False)
         val = CaseValidator(instance=case, data=request.data)
         if val.is_valid():
@@ -74,7 +74,7 @@ class CaseViewSet(BaseViewSet):
         else:
             return self.response_fail(val.errors)
 
-        return self.response(data=val.data)
+        return self.response_success(data=val.data)
 
     @action(methods=["delete"], detail=True, url_path="delete")
     def delete_case(self, request, *args, **kwargs):
@@ -84,12 +84,12 @@ class CaseViewSet(BaseViewSet):
         """
         pk = kwargs.get("pk")
         if pk is None:
-            return self.response(error=self.CASE_ID_NULL)
+            return self.response_success(error=self.CASE_ID_NULL)
         case = TestCase.objects.filter(id=pk, is_delete=False).update(is_delete=True)
         if case == 0:
-            return self.response(error=self.CASE_OBJECT_NULL)
+            return self.response_success(error=self.CASE_OBJECT_NULL)
 
-        return self.response()
+        return self.response_success()
 
     @action(methods=["post"], detail=False, url_path="debug")
     def debug_case(self, request, *args, **kwargs):
@@ -108,11 +108,11 @@ class CaseViewSet(BaseViewSet):
 
         header = self.json_to_dict(header)
         if header is None:
-            return self.response(error=self.JSON_TYPE_ERROR)
+            return self.response_success(error=self.JSON_TYPE_ERROR)
 
         params_body = self.json_to_dict(params_body)
         if params_body is None:
-            return self.response(error=self.JSON_TYPE_ERROR)
+            return self.response_success(error=self.JSON_TYPE_ERROR)
 
         ret_text = "null"
         if method == MethodType.get:
@@ -136,7 +136,7 @@ class CaseViewSet(BaseViewSet):
             if params_type == ParamsType.json:
                 ret_text = requests.delete(url, headers=header, json=params_body)
 
-        return self.response(data=ret_text)
+        return self.response_success(data=ret_text)
 
     @action(methods=["post"], detail=False, url_path="assert")
     def assert_case(self, request, *args, **kwargs):
@@ -152,16 +152,16 @@ class CaseViewSet(BaseViewSet):
         assert_text = request.data.get("assert_text")
         if assert_type == AssertType.include:
             if assert_text in result:
-                return self.response(message="断言包含成功")
+                return self.response_success(message="断言包含成功")
             else:
-                return self.response(error=self.ASSERT_INCLUDE_FAIL)
+                return self.response_success(error=self.ASSERT_INCLUDE_FAIL)
         elif assert_type == AssertType.equal:
             if assert_text == result:
-                return self.response(message="断言相等成功")
+                return self.response_success(message="断言相等成功")
             else:
-                return self.response(error=self.ASSERT_EQUAL_FAIL)
+                return self.response_success(error=self.ASSERT_EQUAL_FAIL)
 
-        return self.response()
+        return self.response_success()
 
     @action(methods=["get"], detail=False, url_path="tree")
     def get_case_tree(self, request, *args, **kwargs):
@@ -199,4 +199,4 @@ class CaseViewSet(BaseViewSet):
 
             data.append(project_info)
 
-        return self.response(data=data)
+        return self.response_success(data=data)

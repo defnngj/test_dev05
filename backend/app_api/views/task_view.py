@@ -31,8 +31,8 @@ class TaskViewSet(BaseViewSet):
             task = TestTask.objects.get(pk=tid, is_delete=False)
             ser = TaskSerializer(instance=task, many=False)
         except TestTask.DoesNotExist:
-            return self.response(error=self.TASK_OBJECT_NULL)
-        return self.response(data=ser.data)
+            return self.response_success(error=self.TASK_OBJECT_NULL)
+        return self.response_success(data=ser.data)
 
     @action(methods=["get"], detail=False, url_path="list")
     def get_task_list(self, request, *args, **kwargs):
@@ -52,7 +52,7 @@ class TaskViewSet(BaseViewSet):
             "size": int(size),
             "taskList": ser.data
         }
-        return self.response(data=data)
+        return self.response_success(data=data)
 
     @action(methods=["delete"], detail=True, url_path="delete")
     def delete_task(self, request, *args, **kwargs):
@@ -62,12 +62,12 @@ class TaskViewSet(BaseViewSet):
         """
         pk = kwargs.get("pk")
         if pk is None:
-            return self.response(error=self.TASK_ID_NULL)
+            return self.response_success(error=self.TASK_ID_NULL)
         task = TestTask.objects.filter(id=pk, is_delete=False).update(is_delete=True)
         if task == 0:
-            return self.response(error=self.TASK_OBJECT_NULL)
+            return self.response_success(error=self.TASK_OBJECT_NULL)
 
-        return self.response()
+        return self.response_success()
 
     @action(methods=["post"], detail=False, url_path="create")
     def create_task(self, request, *args, **kwargs):
@@ -80,7 +80,7 @@ class TaskViewSet(BaseViewSet):
             val.save()  # 保存这个数据
         else:
             return self.response_fail(error=val.errors)
-        return self.response(data=val.data)
+        return self.response_success(data=val.data)
 
     @action(methods=["put"], detail=False, url_path="update")
     def update_task(self, request, *args, **kwargs):
@@ -90,7 +90,7 @@ class TaskViewSet(BaseViewSet):
         """
         tid = request.data.get("id")
         if tid is None:
-            return self.response(error=self.CASE_ID_NULL)
+            return self.response_success(error=self.CASE_ID_NULL)
 
         task = TestTask.objects.get(pk=tid, is_delete=False)
         val = TaskValidator(instance=task, data=request.data)
@@ -99,7 +99,7 @@ class TaskViewSet(BaseViewSet):
         else:
             return self.response_fail(val.errors)
 
-        return self.response(data=val.data)
+        return self.response_success(data=val.data)
 
     @action(methods=["get"], detail=True, url_path='running')
     def get_running(self, request, *args, **kwargs):
@@ -113,14 +113,14 @@ class TaskViewSet(BaseViewSet):
                 task = TestTask.objects.get(pk=tid, is_delete=False)
                 ser = TaskSerializer(instance=task, many=False)
             except TestTask.DoesNotExist:
-                return self.response(error=self.TASK_OBJECT_NULL)
+                return self.response_success(error=self.TASK_OBJECT_NULL)
 
             case_list = ser.data.get("cases", [])
             # running.delay()
             TaskThread(tid, case_list).run()
             print("case list-->", case_list)
 
-        return self.response()
+        return self.response_success()
 
 
 

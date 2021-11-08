@@ -18,8 +18,8 @@ class ModuleView(BaseAPIView):
                module = Module.objects.get(pk=mid, is_delete=False)
                ser = ModuleSerializer(instance=module, many=False)
             except Module.DoesNotExist:
-                return self.response(error=self.MODULE_OBJECT_NULL)
-            return self.response(data=ser.data)
+                return self.response_success(error=self.MODULE_OBJECT_NULL)
+            return self.response_success(data=ser.data)
         else:   # 查询一组数据
             project = Module.objects.filter(is_delete=False).all()
             pg = Pagination()
@@ -31,7 +31,7 @@ class ModuleView(BaseAPIView):
                 "size": int(size),
                 "moduleList": ser.data
             }
-            return self.response(data=data)
+            return self.response_success(data=data)
 
     def post(self, request, *args, **kwargs):
         """
@@ -43,7 +43,7 @@ class ModuleView(BaseAPIView):
             val.save()  # 保存这个数据
         else:
             return self.response_fail(error=val.errors)
-        return self.response()
+        return self.response_success()
 
     def put(self, request, *args, **kwargs):
         """
@@ -53,18 +53,18 @@ class ModuleView(BaseAPIView):
         if pid is None:
             pid = request.data.get("id", "")
             if pid == "":
-                return self.response(error=self.MODULE_ID_NULL)
+                return self.response_success(error=self.MODULE_ID_NULL)
         try:
            module = Module.objects.get(pk=pid, is_delete=False)
         except Module.DoesNotExist:
-            return self.response(error=self.MODULE_OBJECT_NULL)
+            return self.response_success(error=self.MODULE_OBJECT_NULL)
         # 更新
         val = ModuleValidator(instance=module, data=request.data)
         if val.is_valid():  # 判断验证的字段是否都对
             val.save()  # 保存这个数据
         else:
             return self.response_fail(error=val.errors)
-        return self.response()
+        return self.response_success()
 
     def delete(self, request, *args, **kwargs):
         """
@@ -75,9 +75,9 @@ class ModuleView(BaseAPIView):
 
             module = Module.objects.filter(pk=mid, is_delete=False).update(is_delete=True)
             if module == 0:
-                return self.response(error=self.MODULE_DELETE_ERROR)
+                return self.response_success(error=self.MODULE_DELETE_ERROR)
 
-        return self.response()
+        return self.response_success()
 
 
 class ModuleTreeView(BaseAPIView):

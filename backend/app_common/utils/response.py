@@ -39,10 +39,10 @@ def response_fail(error=""):
     error_msg = {
         "30010": str(error)
     }
-    return response(success=False, error=error_msg, data=[])
+    return response_success(success=False, error=error_msg, result=[])
 
 
-def response(success: bool = True, error={}, data: any = []) -> Response:
+def response_success(success: bool = True, error={}, data: any = []) -> Response:
     """
     自定义接口返回格式
     """
