@@ -88,7 +88,7 @@ export default {
 
 <style>
 .navigation {
-  height: 800px;
+  height: 100%;
 }
 
 .nav {

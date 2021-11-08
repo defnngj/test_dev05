@@ -8,7 +8,6 @@
   </div>
 </template>
 
-
 <script>
 import Navigation from '@/views/Navigation.vue'
 
@@ -47,6 +46,7 @@ body {
 
 #nav {
   /* padding: 30px; */
+  height: 100%;
 }
 
 #nav a {
