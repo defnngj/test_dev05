@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib import auth
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
-from app_common.utils.response import response, Error
+from app_common.utils.response import response_success, Error
 
 
 class LoginView(APIView):
@@ -17,7 +17,7 @@ class LoginView(APIView):
         login_password = request.POST.get("password", "")
         print(login_password, login_username)
         if login_username == '' or login_password == '':
-            return response(error=Error.USER_OR_PAWD_NULL)
+            return response_success(error=Error.USER_OR_PAWD_NULL)
         else:
             user = auth.authenticate(username=login_username, password=login_password)
             print(user)
@@ -27,9 +27,9 @@ class LoginView(APIView):
                 token = Token.objects.filter(user=user)
                 token.delete()
                 token = Token.objects.create(user=user)
-                return response(data={"Token": str(token)})
+                return response_success(data={"Token": str(token)})
             else:
-                return response(error=Error.USER_OR_PAWD_ERROR)
+                return response_success(error=Error.USER_OR_PAWD_ERROR)
 
     def delete(self, request):
         """
@@ -38,7 +38,7 @@ class LoginView(APIView):
         userId = request.POST.get("user")
         token = Token.objects.filter(user=userId)
         token.delete()
-        return response()
+        return response_success()
 
 
 

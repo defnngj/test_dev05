@@ -5,7 +5,6 @@ from app_api.models.project_model import Project
 from app_api.serializer.project import ProjectValidator, ProjectSerializer
 from app_common.utils.pagination import Pagination
 from app_common.utils.base_view import BaseAPIView
-from app_common.utils.response import response, Error
 from app_common.utils.token_auth import TokenAuthentication
 
 
