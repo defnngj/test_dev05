@@ -29,7 +29,7 @@
 
   export default {
     props: ['pid'],
-    data(){
+    data() {
       return {
         showStatus: true,
         showTitle: '',
@@ -46,16 +46,12 @@
       }
     },
     created() {
-      console.log("自动被执行created--->", this.pid)
       if (this.pid === 0) {
-        console.log("创建", this.pid)
         this.showTitle = "创建项目"
       } else {
-        console.log("编辑", this.pid)
         this.showTitle = "编辑项目"
         this.getProject()
       }
-      console.log("子组件", this.showStatus)
     },
     mounted() {
       console.log("自动被执行mounted")
@@ -66,9 +62,7 @@
       // 获取一条项目信息
       async getProject() {
         const resp = await ProjectApi.getProject(this.pid)
-        console.log("resp--->", resp)
         if (resp.success == true) {
-          console.log("success")
           this.form = resp.data
         } else {
           this.$message.error(resp.error.message);
@@ -77,19 +71,16 @@
 
       // 关闭dialog
       cancelProject() {
-        console.log("我把自己关闭了")
         this.$emit('cancel', {})
       },
 
       // 创建项目按钮
       onSubmit(formName) {
-         this.$refs[formName].validate((valid) => {
+        this.$refs[formName].validate((valid) => {
           if (valid) {
             if(this.pid === 0) {
-              console.log("创建 - 保存")
               ProjectApi.createProject(this.form).then(resp => {
                 if (resp.success == true) {
-                  console.log("success")
                   this.$message.success("创建成功！")
                   this.cancelProject()
                 } else {
@@ -97,10 +88,8 @@
                 }
               })
             } else {
-              console.log("编辑 - 保存")
               ProjectApi.updateProject(this.pid, this.form).then(resp => {
                 if (resp.success == true) {
-                  console.log("success")
                   this.$message.success("更新成功！")
                   this.cancelProject()
                 } else {

@@ -3,12 +3,11 @@ from app_api.models.project_model import Project
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')  # 日期格式化
 
     class Meta:
         model = Project
-        fields = ['id', 'name', 'describe', 'status']  # 要显示的字段
-
-# aatype = [1, 2, 3]
+        fields = ['id', 'name', 'describe', 'status', 'create_time']  # 要显示的字段
 
 
 class ProjectValidator(serializers.Serializer):

@@ -10,7 +10,7 @@
       <div class="filter-line">
         <el-button type="primary" @click="showCreate()">创建</el-button>
       </div>
-
+      <!-- 表格 -->
       <el-table :data="tableData"
           v-loading="loading"
           element-loading-text="拼命加载中"
@@ -19,25 +19,28 @@
           style="width: 100%">
         <el-table-column prop="name" label="名称" min-width="20%">
         </el-table-column>
-        <el-table-column prop="describe" label="描述" min-width="45%">
+        <el-table-column prop="describe" label="描述" min-width="30%">
         </el-table-column>
-        <el-table-column prop="status" label="状态" min-width="15%">
+        <el-table-column prop="status" label="状态" min-width="10%">
           <template slot-scope="scope">
-          <span v-if="scope.row.status === true">
-            <el-tag>开启</el-tag>
-          </span>
-          <span v-else>
-            <el-tag type="info">关闭</el-tag>
-          </span>
-        </template>
+            <span v-if="scope.row.status === true">
+              <el-tag>开启</el-tag>
+            </span>
+            <span v-else>
+              <el-tag type="info">关闭</el-tag>
+            </span>
+          </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" min-width="20">
+        <el-table-column prop="create_time" label="创建时间" min-width="30%">
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
             <el-button @click="showEdit(scope.row)" type="primary" size="mini" circle icon="el-icon-edit"></el-button>
             <el-button @click="deleteProject(scope.row)" type="danger" size="mini" circle icon="el-icon-delete"></el-button>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页 -->
       <div class="foot-page">
         <el-pagination
           @size-change="handleSizeChange"
@@ -48,7 +51,6 @@
           layout="total, sizes, prev, pager, next"
           :total=total>
         </el-pagination>
-
       </div>
     </el-card>
     <projectDialog v-if="showDailog" :pid=projectId @cancel="cancelProject"></projectDialog>
@@ -57,7 +59,7 @@
 
 <script>
 import ProjectApi from '../../request/project'
-import projectDialog from './projectDialog.vue'
+import projectDialog from './ProjectDialog.vue'
 
   export default {
     components: {
@@ -77,20 +79,16 @@ import projectDialog from './projectDialog.vue'
       }
     },
     created() {
-      console.log("自动被执行created")
       console.log("父组件", this.showDailog)
     },
     mounted() {
-      console.log("自动被执行mounted")
       this.initProject()
     },
     methods: {
       async initProject() {
         this.loading = true
         const resp = await ProjectApi.getProjects(this.query)
-        console.log("resp--->", resp)
         if (resp.success == true) {
-          console.log("success")
           this.tableData = resp.data.projectList
           this.total = resp.data.total
         } else {
@@ -113,9 +111,7 @@ import projectDialog from './projectDialog.vue'
 
       // 删除一条项目信息
       async deleteProject(row) {
-        console.log("row.id", row.id)
         const resp = await ProjectApi.deleteProject(row.id)
-        console.log("resp--->", resp)
         if (resp.success == true) {
           this.$message.success("删除成功！")
           this.initProject()
@@ -126,7 +122,6 @@ import projectDialog from './projectDialog.vue'
       },
       // 子组件的回调
       cancelProject() {
-        console.log("子组件把自己关闭了")
         this.showDailog = false
         this.projectId = 0
         this.initProject()
