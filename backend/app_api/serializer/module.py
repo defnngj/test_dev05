@@ -3,11 +3,12 @@ from app_api.models import Module
 
 
 class ModuleSerializer(serializers.ModelSerializer):
-    project_name = serializers.CharField(source="project.name")  #反向获取项目的名称
+    project_name = serializers.CharField(source="project.name")  # 反向获取项目的名称
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')  # 日期格式化
 
     class Meta:
         model = Module
-        fields = ['name', 'describe', 'project_id', "project_name"]  # 要显示的字段
+        fields = ['id', 'name', 'describe', 'project_id', "project_name", 'create_time']  # 要显示的字段
         # fields = "__all__"
 
 

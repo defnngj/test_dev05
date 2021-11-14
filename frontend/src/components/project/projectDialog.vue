@@ -1,7 +1,7 @@
 <template>
   <div class="project-dialog">
     <el-dialog :title=showTitle :visible.sync="showStatus" @close="cancelProject()">
-      <el-form :rules="rules" ref="form" :model="form" label-width="80px">
+      <el-form v-if="inResize === true" :rules="rules" ref="form" :model="form" label-width="80px">
         <el-form-item label="名称" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -42,7 +42,8 @@
           name: [
             { required: true, message: '请输入项目名称', trigger: 'blur' }
           ]
-         }
+        },
+        inResize: true
       }
     },
     created() {
@@ -52,6 +53,11 @@
         this.showTitle = "编辑项目"
         this.getProject()
       }
+      // 强制刷新
+      this.inResize = false;
+      this.$nextTick(() => {
+        this.inResize = true;
+      });
     },
     mounted() {
       console.log("自动被执行mounted")
