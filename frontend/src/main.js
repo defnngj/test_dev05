@@ -13,3 +13,8 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+
+
+// https://github.com/dirkliu/vue-json-editor
+// https://gitee.com/wangbin3162/bin-code-editor
+

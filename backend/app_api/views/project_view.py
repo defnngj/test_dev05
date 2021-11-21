@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import JsonResponse
 # from rest_framework.views import APIView
 from app_api.models.project_model import Project
+from app_api.models.module_model import Module
 from app_api.serializer.project import ProjectValidator, ProjectSerializer
+from app_api.serializer.module import ModuleSerializer
 from app_common.utils.pagination import Pagination
 from app_common.utils.base_view import BaseAPIView
 from app_common.utils.token_auth import TokenAuthentication
@@ -85,8 +87,28 @@ class ProjectView(BaseAPIView):
         return self.response_success()
 
 
+class ProjectModuleView(BaseAPIView):
+    authentication_classes = []
 
+    def get(self, request, *args, **kwargs):
+        """
+        查询
+        """
+        pid = kwargs.get("pk", 1)
+        page = request.query_params.get("page", "1")
+        size = request.query_params.get("size", "5")
 
+        module = Module.objects.filter(project_id=pid, is_delete=False).all()
+        pg = Pagination()
+        page_data = pg.paginate_queryset(queryset=module, request=request, view=self)
+        ser = ModuleSerializer(instance=page_data, many=True)
+        data = {
+            "total": len(module),
+            "page": int(page),
+            "size": int(size),
+            "moduleList": ser.data
+        }
+        return self.response_success(data=data)
 
 
 

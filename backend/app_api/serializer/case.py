@@ -10,11 +10,13 @@ class CaseSerializer(serializers.ModelSerializer):
     测试用例序列化
     """
     module_name = serializers.CharField(source="module.name")  # 反向获取模块的名称
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')  # 日期格式化
 
     class Meta:
         model = TestCase
-        fields = ['name', 'url', 'method', 'header', 'params_type', 'params_body',
-                  'result', 'assert_type', 'assert_text', 'module_id', "module_name"]  # 要显示的字段
+        fields = ['id', 'name', 'url', 'method', 'header', 'params_type', 'params_body',
+                  'result', 'assert_type', 'assert_text', 'module_id', "module_name",
+                  "create_time"]  # 要显示的字段
 
 
 class CaseValidator(serializers.Serializer):

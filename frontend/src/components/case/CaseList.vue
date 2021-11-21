@@ -10,7 +10,9 @@
     <div v-else style="height: 30px;">
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-        <el-breadcrumb-item><a @click="showDebug()"> 用例管理</a></el-breadcrumb-item>
+        <el-breadcrumb-item >
+          <a @click="showDebug()">用例管理</a>
+        </el-breadcrumb-item>
         <el-breadcrumb-item>用例调试</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -26,21 +28,13 @@
       <div v-if="isList">
         <!-- 表格 -->
         <el-table :data="tableData" v-loading="loading" style="width: 100%">
-          <el-table-column prop="name" label="名称" min-width="15%">
+          <el-table-column prop="name" label="名称" min-width="20%">
           </el-table-column>
-          <el-table-column prop="describe" label="描述" min-width="30%">
+          <el-table-column prop="method" label="方法" min-width="10%">
           </el-table-column>
-          <el-table-column prop="status" label="状态" min-width="10%">
-            <template slot-scope="scope">
-              <span v-if="scope.row.status === true">
-                <el-tag>开启</el-tag>
-              </span>
-              <span v-else>
-                <el-tag type="info">关闭</el-tag>
-              </span>
-            </template>
+          <el-table-column prop="url" label="URL" min-width="30%">
           </el-table-column>
-          <el-table-column prop="project_name" label="项目" min-width="15%">
+          <el-table-column prop="module_name" label="模块" min-width="15%">
           </el-table-column>
           <el-table-column prop="create_time" label="创建" min-width="20%">
           </el-table-column>
@@ -65,7 +59,7 @@
         </div>
       </div>
       <div v-else>
-        <CaseDebug></CaseDebug>
+        <CaseDebug :cid=caseId></CaseDebug>
       </div>
     </el-card>
   </div>
@@ -73,6 +67,7 @@
 
 <script>
 import ModuleApi from '../../request/module'
+import CaseApi from '../../request/case'
 import CaseDebug from './CaseDebug.vue'
 
   export default {
@@ -90,22 +85,23 @@ import CaseDebug from './CaseDebug.vue'
         query: {
           page: 1,
           size: 5,
-        }
+        },
+        caseId: 0,
       }
     },
     created() {
       console.log("父组件", this.showDailog)
     },
     mounted() {
-      this.initModule()
+      this.initCases()
     },
     methods: {
-      // 初始化模块列表
-      async initModule() {
+      // 初始化用例列表
+      async initCases() {
         this.loading = true
-        const resp = await ModuleApi.getModules(this.query)
+        const resp = await CaseApi.getCases(this.query)
         if (resp.success == true) {
-          this.tableData = resp.data.moduleList
+          this.tableData = resp.data.caseList
           this.total = resp.data.total
         } else {
           this.$message.error(resp.error.message);
@@ -114,19 +110,20 @@ import CaseDebug from './CaseDebug.vue'
       },
 
       // 显示创建窗口
-      showDebug() {
+      showDebug() {        
         // this.showDailog = true
         if (this.isList === true) {
           this.isList = false
         } else {
           this.isList = true
+          this.caseId = 0
         }
       },
 
       // 显示编辑窗口
       showEdit(row) {
-        this.moduleId = row.id
-        this.showDailog = true
+        this.caseId = row.id
+        this.showDebug()
       },
 
       // 删除一条项目信息

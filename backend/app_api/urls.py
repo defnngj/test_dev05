@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework import routers
-from app_api.views.project_view import ProjectView
+from app_api.views.project_view import ProjectView, ProjectModuleView
 from app_api.views.module_view import ModuleView
 from app_api.views.module_view import ModuleTreeView
 from app_api.views.case_view import CaseViewSet
@@ -10,6 +10,7 @@ from app_api.views.task_view import TaskViewSet
 url_path = [
     path('v1/project/', ProjectView.as_view()),
     path('v1/project/<int:pk>/', ProjectView.as_view()),
+    path("v1/project/<int:pk>/module/", ProjectModuleView.as_view()),
 
     path('v1/module/', ModuleView.as_view()),
     path('v1/module/<int:pk>/', ModuleView.as_view()),

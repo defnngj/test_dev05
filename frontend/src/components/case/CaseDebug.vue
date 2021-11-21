@@ -12,7 +12,7 @@
         <el-input v-model="api.url" placeholder="请输入接口"></el-input>
       </span>
       <span style="width: 10%; float: left;">
-          <el-button type="primary">发送</el-button>
+        <el-button type="primary" @click="clickSend()">发送</el-button>
       </span>
     </div>
 
@@ -36,60 +36,117 @@
       <el-input type="textarea"
         :rows="5"
         placeholder="Response"
-        v-model="result">
+        v-model="api.result">
       </el-input>
     </div>
 
     <div class="div-line">
       <el-collapse v-model="activeNames" @change="handleChange">
+        <!-- 断言 -->
         <el-collapse-item title="断言" name="1">
-         <el-input type="textarea"
+          <span style="float: left;">
+            <div class="div-line">
+              <el-radio v-model="api.assert_type" label="include">include</el-radio>
+              <el-radio v-model="api.assert_type" label="equal">equal</el-radio>
+            </div>
+          </span>
+          <span style="float: right; margin-bottom: 5px;">
+            <el-button type="success" plain size="small" @click="clickAssert()">断言</el-button>
+          </span>
+          <el-input type="textarea"
             :rows="5"
             placeholder="Assert"
-            v-model="assertText">
+            v-model="api.assert_text">
           </el-input>
         </el-collapse-item>
+
         <el-collapse-item title="保存用例" name="2">
-          <div>保存用例</div>
+          <div style="margin-bottom: 10px;">
+            <el-select v-model="projectId" placeholder="请选择项目" @change="chanageProject()">
+              <el-option
+                v-for="(item, index) in projectOptions"
+                :key="index"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <el-select v-model="api.module_id" placeholder="请选择模块">
+              <el-option
+                v-for="item in moduleOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </div>
+          <span style="width: 80%; float: left; margin-right: 10px;">
+            <el-input v-model="api.name" placeholder="请输入名称"></el-input>
+          </span>
+          <span style="width: 15%; float: left;">
+            <el-button type="primary" @click="saveCase()">保存</el-button>
+          </span>
         </el-collapse-item>       
       </el-collapse>
     </div>
-
-
-
   </div>
 </template>
 
 <script>
-// import ModuleApi from '../../request/module'
+import CaseApi from '../../request/case'
+import ProjectApi from '../../request/project'
 import vueJsonEditor from 'vue-json-editor'
 
   export default {
     components: {
       vueJsonEditor
     },
+    props: ['cid'],
     data(){
       return {
         methods:[
-          {value: 'get', label: 'GET'}, 
-          {value: 'post', label: 'POST'},
-          {value: 'put', label: 'PUT'},
-          {value: 'delete', label: 'DELETE'}
+          {value: 'GET', label: 'GET'}, 
+          {value: 'POST', label: 'POST'},
+          {value: 'PUT', label: 'PUT'},
+          {value: 'DELETE', label: 'DELETE'}
         ],
         api: {
-          method: 'get',
+          method: 'GET',
           url: '',
           header: {},
           params_type: 'params',
           params_body: {},
           result: '',
+          assert_type: 'include',
+          assert_text: '',
+          module_id: '',
+          name: ''
         },
         activeJSON: 'first',
-        activeNames: ['1']
+        activeNames: ['1'],
+        projectOptions: [],
+        projectId: '',
+        moduleOptions: [],
       }
     },
     created() {
-      console.log("created")
+      console.log("created", this.cid)
+      if (this.cid !== 0) {
+        this.initCaseInfo()
+      } else {
+        console.log("新建用例")
+        this.api = {
+          method: 'GET',
+          url: '',
+          header: {},
+          params_type: 'params',
+          params_body: {},
+          result: '',
+          assert_type: 'include',
+          assert_text: '',
+          module_id: '',
+          name: ''
+        }
+      }
     },
     mounted() {
       console.log("mounted")
@@ -101,35 +158,138 @@ import vueJsonEditor from 'vue-json-editor'
 
       handleChange(val) {
         console.log(val);
+        this.getProjectList()
+      },
+
+      async initCaseInfo() {
+        let resp = await CaseApi.getCase(this.cid)
+        console.log(resp)
+        this.api = resp.data
+      },
+
+
+      // 点击发送
+      async clickSend() {
+        if(this.api.url == '') {
+          this.$message.error('url不能为空')
+          return
+        }
+        // data to JSON
+        this.api.header = JSON.stringify(this.api.header)
+        this.api.params_body = JSON.stringify(this.api.params_body)
+        const resp = await CaseApi.debugCase(this.api)
+        console.log(resp)
+        if (resp.success == true) {
+          this.api.result = resp.data
+          // JSON to data
+          this.api.header = JSON.parse(this.api.header)
+          this.api.params_body = JSON.parse(this.api.params_body)
+        } else {
+          this.$message.error(resp.error.message)
+        }        
+      },
+
+      // 断言
+      async clickAssert() {
+        this.api.result = JSON.stringify(this.api.result)
+        const resp = await CaseApi.assertCase(this.api)
+        console.log(resp)
+        if (resp.success == true) {
+          this.api.result = JSON.parse(this.api.result)
+          this.$message.success('断言成功')
+        } else {
+          this.$message.error(resp.error.message)
+        }
+      },
+
+      // 获取项目列表
+      async getProjectList() {
+        const query = {page: 1, size: 1000}
+        const resp = await ProjectApi.getProjects(query)
+        if (resp.success == true) {
+          const ProjectList = resp.data.projectList
+          for(let i=0; i < ProjectList.length; i++) {
+            this.projectOptions.push({
+              value: ProjectList[i].id.toString(),
+              label: ProjectList[i].name,
+            })
+          }
+        } else {
+          this.$message.error(resp.error.message);
+        }
+        this.loading = false
+      },
+
+      async chanageProject() {
+        console.log('adfasdfasd')
+        this.moduleOptions = []
+        const query = {page: 1, size: 1000}
+        const resp = await ProjectApi.getModules(this.projectId, query)
+        if (resp.success == true) {
+          const ModuleList = resp.data.moduleList
+          for(let i=0; i < ModuleList.length; i++) {
+            this.moduleOptions.push({
+              value: ModuleList[i].id.toString(),
+              label: ModuleList[i].name,
+            })
+          }
+        }
+      },
+
+      async saveCase() {
+        if(this.api.url == '') {
+          this.$message.error('url不能为空')
+          return
+        }
+        if (this.api.name == '') {
+          this.$message.error('名称不能为空')
+          return
+        }
+
+        // data to JSON
+        this.api.header = JSON.stringify(this.api.header)
+        this.api.params_body = JSON.stringify(this.api.params_body)
+        this.api.result = JSON.stringify(this.api.result)
+        const resp = await CaseApi.createCase(this.api)
+        console.log(resp)
+        if(resp.success == true) {
+           // JSON to data
+          this.api.header = JSON.parse(this.api.header)
+          this.api.params_body = JSON.parse(this.api.params_body)
+          this.api.result = JSON.parse(this.api.result)
+          this.$message.success('创建用例成功')
+        } else {
+          this.$message.error(resp.error.message)
+        }
+
       }
 
     }
-
   }
 </script>
 
 <style>
 div.jsoneditor {
-    border: thin solid #ced4da;
+  border: thin solid #ced4da;
 }
 
 div.jsoneditor-menu {
-    display: none;
+  display: none;
 }
 
 .ace-jsoneditor .ace_gutter {
-    background: white;
+  background: white;
 }
 
 div.jsoneditor-outer.has-main-menu-bar {
-    margin-top: 0px;
-    padding-top: 0px;
+  margin-top: 0px;
+  padding-top: 0px;
 }
 
 .per-label {
-    margin-right: 10px;
-    margin-bottom: 4px;
-    font-size: 1rem;
+  margin-right: 10px;
+  margin-bottom: 4px;
+  font-size: 1rem;
 }
 </style>
 <style scoped>

@@ -35,7 +35,7 @@ class ModuleView(BaseAPIView):
 
     def post(self, request, *args, **kwargs):
         """
-        添加模块
+        添加
         /module/abc/
         """
         val = ModuleValidator(data=request.data)

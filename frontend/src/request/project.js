@@ -21,7 +21,11 @@ class ProjectApi {
     updateProject(pid, data) {
       return request.put('/v1/project/'+pid+'/', data)
     }
-  
+    
+    getModules(project_id, data) {
+      return request.get('/v1/project/'+project_id+'/module/', data)
+    }
+
   }
   
   export default new ProjectApi()
