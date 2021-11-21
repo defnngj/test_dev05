@@ -41,7 +41,7 @@
     </div>
 
     <div class="div-line">
-      <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse v-model="otherNames" @change="handleChange">
         <!-- 断言 -->
         <el-collapse-item title="断言" name="1">
           <span style="float: left;">
@@ -61,8 +61,8 @@
         </el-collapse-item>
 
         <el-collapse-item title="保存用例" name="2">
-          <div style="margin-bottom: 10px;">
-            <el-select v-model="projectId" placeholder="请选择项目" @change="chanageProject()">
+          <div class="dev-line" style="margin-bottom: 10px;">
+            <el-select v-model="api.project_id" placeholder="请选择项目" @change="chanageProject()">
               <el-option
                 v-for="(item, index) in projectOptions"
                 :key="index"
@@ -79,12 +79,14 @@
               </el-option>
             </el-select>
           </div>
-          <span style="width: 80%; float: left; margin-right: 10px;">
-            <el-input v-model="api.name" placeholder="请输入名称"></el-input>
-          </span>
-          <span style="width: 15%; float: left;">
-            <el-button type="primary" @click="saveCase()">保存</el-button>
-          </span>
+          <div class="dev-line">
+            <span style="width: 80%; float: left; margin-right: 10px;">
+              <el-input v-model="api.name" placeholder="请输入名称"></el-input>
+            </span>
+            <span style="width: 15%; float: left;">
+              <el-button type="danger" @click="saveCase()">保存</el-button>
+            </span>
+          </div>
         </el-collapse-item>       
       </el-collapse>
     </div>
@@ -122,7 +124,7 @@ import vueJsonEditor from 'vue-json-editor'
           name: ''
         },
         activeJSON: 'first',
-        activeNames: ['1'],
+        otherNames: [''],
         projectOptions: [],
         projectId: '',
         moduleOptions: [],
@@ -143,6 +145,7 @@ import vueJsonEditor from 'vue-json-editor'
           result: '',
           assert_type: 'include',
           assert_text: '',
+          project_id: '',
           module_id: '',
           name: ''
         }
@@ -161,12 +164,15 @@ import vueJsonEditor from 'vue-json-editor'
         this.getProjectList()
       },
 
+      // 初始化用例信息
       async initCaseInfo() {
         let resp = await CaseApi.getCase(this.cid)
         console.log(resp)
         this.api = resp.data
+        this.api.result = JSON.parse(this.api.result)
+        this.chanageProject()
+        this.api.module_id = this.api.module_id.toString()
       },
-
 
       // 点击发送
       async clickSend() {
@@ -221,10 +227,9 @@ import vueJsonEditor from 'vue-json-editor'
       },
 
       async chanageProject() {
-        console.log('adfasdfasd')
         this.moduleOptions = []
         const query = {page: 1, size: 1000}
-        const resp = await ProjectApi.getModules(this.projectId, query)
+        const resp = await ProjectApi.getModules(this.api.project_id, query)
         if (resp.success == true) {
           const ModuleList = resp.data.moduleList
           for(let i=0; i < ModuleList.length; i++) {
@@ -251,7 +256,6 @@ import vueJsonEditor from 'vue-json-editor'
         this.api.params_body = JSON.stringify(this.api.params_body)
         this.api.result = JSON.stringify(this.api.result)
         const resp = await CaseApi.createCase(this.api)
-        console.log(resp)
         if(resp.success == true) {
            // JSON to data
           this.api.header = JSON.parse(this.api.header)
