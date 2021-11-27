@@ -113,7 +113,7 @@ import vueJsonEditor from 'vue-json-editor'
         ],
         api: {
           method: 'GET',
-          url: '',
+          url: 'http://httpbin.org/get',
           header: {},
           params_type: 'params',
           params_body: {},
@@ -138,7 +138,7 @@ import vueJsonEditor from 'vue-json-editor'
         console.log("新建用例")
         this.api = {
           method: 'GET',
-          url: '',
+          url: 'http://httpbin.org/get',
           header: {},
           params_type: 'params',
           params_body: {},
@@ -198,13 +198,19 @@ import vueJsonEditor from 'vue-json-editor'
       // 断言
       async clickAssert() {
         this.api.result = JSON.stringify(this.api.result)
+        if (this.api.assert_type == 'equal') {
+          this.api.assert_text = JSON.stringify(this.api.assert_text)
+        }
         const resp = await CaseApi.assertCase(this.api)
         console.log(resp)
         if (resp.success == true) {
-          this.api.result = JSON.parse(this.api.result)
           this.$message.success('断言成功')
         } else {
           this.$message.error(resp.error.message)
+        }
+        this.api.result = JSON.parse(this.api.result)
+        if (this.api.assert_type == 'equal') {
+          this.api.assert_text = JSON.parse(this.api.assert_text)
         }
       },
 
