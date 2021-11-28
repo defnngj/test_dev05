@@ -128,7 +128,7 @@ import CaseDebug from './CaseDebug.vue'
 
       // 删除一条项目信息
       async deleteModule(row) {
-        this.$confirm('是否要删除模块?', '提示', {
+        this.$confirm('是否要删除用例?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

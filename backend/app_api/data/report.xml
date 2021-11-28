@@ -1,34 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-	<testsuite name="RunTest-20211017151450" tests="2" file=".py" time="0.504" timestamp="2021-10-17T15:14:51" failures="1" errors="0" skipped="0">
-		<testcase classname="RunTest" name="test_case_00002_case2" time="0.003" timestamp="2021-10-17T15:14:51" file="app_api\running_tests.py" line="65">
-			<!--test_case_00002_case2-->
+	<testsuite name="RunTest-20211128165843" tests="3" file=".py" time="1.583" timestamp="2021-11-28T16:58:44" failures="3" errors="0" skipped="0">
+		<testcase classname="RunTest" name="test_case_00001_case3" time="0.536" timestamp="2021-11-28T16:58:43" file="app_api\running_tests.py" line="65">
+			<!--test_case_00001_case3-->
+			<failure type="AssertionError" message="'cd' not found in &lt;Response [200]&gt;"><![CDATA[Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 182, in wrapper
+    return func(self, *args, **kwargs)
+  File "D:\class_dev\test_dev05\backend\app_api\running_tests.py", line 97, in test_case
+    self.assertIn(assert_text, ret_text)
+AssertionError: 'cd' not found in <Response [200]>
+]]></failure>
 			<system-out><![CDATA[url http://httpbin.org/post
 method POST
 header {}
-params_type form
-params_body {'info': 'post interface'}
+params_type data
+params_body {"ab":"cd"}
 assert_type include
-assert_text post interface
-error Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+assert_text cd
+ret_text---> <Response [200]>
 ]]></system-out>
 		</testcase>
-		<testcase classname="RunTest" name="test_case_00001_case1" time="0.501" timestamp="2021-10-17T15:14:51" file="app_api\running_tests.py" line="65">
-			<!--test_case_00001_case1-->
-			<failure type="AssertionError" message="'httpbin.org' not found in &lt;Response [200]&gt;"><![CDATA[Traceback (most recent call last):
+		<testcase classname="RunTest" name="test_case_00002_case4" time="0.519" timestamp="2021-11-28T16:58:44" file="app_api\running_tests.py" line="65">
+			<!--test_case_00002_case4-->
+			<failure type="AssertionError" message="'{\n  &quot;args&quot;: {}, \n  &quot;headers&quot;: {\n    &quot;[275 chars]&quot;\n}' != &lt;Response [200]&gt;"><![CDATA[Traceback (most recent call last):
   File "C:\Python38\lib\site-packages\ddt.py", line 182, in wrapper
     return func(self, *args, **kwargs)
-  File "D:\class_dev\test_dev05\backend\app_api\running_tests.py", line 86, in test_case
-    self.assertIn(assert_text, ret_text)
-AssertionError: 'httpbin.org' not found in <Response [200]>
+  File "D:\class_dev\test_dev05\backend\app_api\running_tests.py", line 88, in test_case
+    self.assertEqual(assert_text, ret_text)
+AssertionError: '{\n  "args": {}, \n  "headers": {\n    "[275 chars]"\n}' != <Response [200]>
 ]]></failure>
 			<system-out><![CDATA[url http://httpbin.org/get
 method GET
 header {}
 params_type params
 params_body {}
-assert_type include
-assert_text httpbin.org
+assert_type equal
+assert_text {
+  "args": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Host": "httpbin.org", 
+    ",User-Agent": "python-requests/2.25.0", 
+    "X-Amzn-Trace-Id": "Root=1-61a2494f-00efe7091a7cafd0177c080d"
+  }, 
+  "origin": "113,.87.180.138", 
+  "url": "http://httpbin.org/get"
+}
+]]></system-out>
+		</testcase>
+		<testcase classname="RunTest" name="test_case_00003_case5" time="0.528" timestamp="2021-11-28T16:58:44" file="app_api\running_tests.py" line="65">
+			<!--test_case_00003_case5-->
+			<failure type="AssertionError" message="'{\n  &quot;args&quot;: {}, \n  &quot;headers&quot;: {\n    &quot;[594 chars]&quot;\n}' != &lt;Response [200]&gt;"><![CDATA[Traceback (most recent call last):
+  File "C:\Python38\lib\site-packages\ddt.py", line 182, in wrapper
+    return func(self, *args, **kwargs)
+  File "D:\class_dev\test_dev05\backend\app_api\running_tests.py", line 88, in test_case
+    self.assertEqual(assert_text, ret_text)
+AssertionError: '{\n  "args": {}, \n  "headers": {\n    "[594 chars]"\n}' != <Response [200]>
+]]></failure>
+			<system-out><![CDATA[url http://httpbin.org/get
+method GET
+header {}
+params_type params
+params_body {}
+assert_type equal
+assert_text {
+  "args": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Host": "httpbin.org", 
+    ",User-Agent": "python-requests/2.25.0", 
+    "X-Amzn-Trace-Id": "Root=1-61a31cad-7d3456121ec357f424a469df"
+  }, 
+  "origin": "113,.87.180.138", 
+  "url": "http://httpbin.org/get"
+}{
+  "args": {}, 
+  "headers": {
+    "Accept": "*/*", 
+    "Accept-Encoding": "gzip, deflate", 
+    "Host": "httpbin.org", 
+    ",User-Agent": "python-requests/2.25.0", 
+    "X-Amzn-Trace-Id": "Root=1-61a31cad-7d3456121ec357f424a469df"
+  }, 
+  "origin": "113,.87.180.138", 
+  "url": "http://httpbin.org/get"
+}
 ]]></system-out>
 		</testcase>
 	</testsuite>

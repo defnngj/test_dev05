@@ -119,6 +119,9 @@ class TaskViewSet(BaseViewSet):
             # running.delay()
             TaskThread(tid, case_list).run()
             print("case list-->", case_list)
+            # 1.任务->执行中
+            print("2.任务->执行中")
+            TestTask.objects.select_for_update().filter(id=tid).update(status=1)
 
         return self.response_success()
 

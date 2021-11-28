@@ -30,6 +30,9 @@ class CaseApi {
     return request.put('/v1/case/'+cid+'/', data)
   }
 
+  getCaseTree() {
+    return request.get('/v1/case/tree')
+  }
 }
 
 export default new CaseApi()

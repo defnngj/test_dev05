@@ -11,12 +11,14 @@ class CaseSerializer(serializers.ModelSerializer):
     """
     module_name = serializers.CharField(source="module.name")  # 反向获取模块的名称
     create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')  # 日期格式化
+    project_id = serializers.CharField(source="module.project_id")  # 反向获取项目的ID
+    project_name = serializers.CharField(source="module.project")  # 反向获取项目的名称
 
     class Meta:
         model = TestCase
         fields = ['id', 'name', 'url', 'method', 'header', 'params_type', 'params_body',
                   'result', 'assert_type', 'assert_text', 'module_id', "module_name",
-                  "create_time"]  # 要显示的字段
+                  "create_time", 'project_id', 'project_name']  # 要显示的字段
 
 
 class CaseValidator(serializers.Serializer):

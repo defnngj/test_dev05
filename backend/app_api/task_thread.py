@@ -40,10 +40,6 @@ class TaskThread:
         with(open(DATA_FILE_PATH, "w")) as f:
             f.write(cases_json)
 
-        # 2.任务->执行中
-        print("2.任务->执行中")
-        TestTask.objects.select_for_update().filter(id=self.tid).update(status=1)
-
         # 3.执行运行测试用例的文件， 它会生成 result.xml 文件
         print("3.运行用例前---》", time.ctime())
         running.delay()

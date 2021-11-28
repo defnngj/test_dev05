@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Project from '../components/project/Project.vue'
 import Module from '../components/module/Module.vue'
 import CaseList from '../components/case/CaseList.vue'
-import testTask from '../components/testTask.vue'
+import Task from '../components/task/Task.vue'
 
 
 Vue.use(VueRouter)
@@ -26,8 +26,8 @@ const routes = [
   },
   {
     path: '/task',
-    name: 'testTask',
-    component: testTask
+    name: 'Task',
+    component: Task
   },
   // {
   //   path: '/about',
