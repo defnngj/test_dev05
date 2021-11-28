@@ -179,6 +179,8 @@ class CaseViewSet(BaseViewSet):
             }
 
             modules = Module.objects.filter(is_delete=False, project_id=project.id)
+            if len(modules) == 0:
+                project_info["disabled"] = True
             for module in modules:
                 module_info = {
                     "label": module.name,
@@ -186,6 +188,8 @@ class CaseViewSet(BaseViewSet):
                 }
 
                 cases = TestCase.objects.filter(is_delete=False, module_id=module.id)
+                if len(cases) == 0:
+                    module_info["disabled"] = True
                 for case in cases:
                     case_info = {
                         "id": case.id,
