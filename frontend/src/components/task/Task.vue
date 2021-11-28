@@ -86,7 +86,8 @@ import TaskDialog from './TaskDialog.vue'
         query: {
           page: 1,
           size: 5,
-        }
+        },
+        taskHeartbeat:null
       }
     },
     created() {
@@ -94,9 +95,13 @@ import TaskDialog from './TaskDialog.vue'
     },
     mounted() {
       this.initTask()
-      setInterval(() => {
+      this.taskHeartbeat = setInterval(() => {
         this.initTask()
       }, 5000);
+    },
+    destroyed() {
+      // 销毁时候清除定时器
+      clearInterval(this.taskHeartbeat);
     },
     methods: {
       async initTask() {
