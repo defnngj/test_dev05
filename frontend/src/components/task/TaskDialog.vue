@@ -165,12 +165,17 @@
   }
 </script>
 
+<style>
+.el-tree {
+  background: #f1f3fa !important;
+}
+</style>
 <style scoped>
 .dialog-footer {
   float: right;
 }
 .div-tree {
-  max-height: 150px;
+  max-height: 180px;
   overflow: auto;
 }
 </style>
