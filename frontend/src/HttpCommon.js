@@ -21,10 +21,12 @@ function makeRequest(requestType, url, dataOrParam, responseType, additionalHead
   const header = {}
   if (process.env.NODE_ENV === 'local') {
     header['Access-Control-Allow-Origin'] = '*'
-    header['x-account-email'] = 'yuchou.zou@klook.com'
-    header['x-account-fullname'] = 'yuchou.zou'
+    header['x-account-email'] = ''
+    header['x-account-fullname'] = ''
+    header['token'] = sessionStorage.token
   } else {
     header['Access-Control-Allow-Origin'] = '*'
+    header['token'] = sessionStorage.token
   }
 
   Object.keys(additionalHeader).forEach(key => {
@@ -108,6 +110,7 @@ function commonRequest(requestType, url, dataOrParam, responseType, isLoading = 
 
 export default {
   get(url, params, responseType = 'json', isLoading = false, additionalHeader = {}) {
+    console.log('get: ', additionalHeader)
     return commonRequest('get', url, params, responseType, isLoading, additionalHeader)
   },
 

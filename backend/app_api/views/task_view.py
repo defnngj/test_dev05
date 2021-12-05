@@ -18,7 +18,7 @@ DATA_FILE_PATH = os.path.join(BASE_DIR, "app_api", "data", "test_data.json")
 
 class TaskViewSet(BaseViewSet):
     queryset = TestTask.objects.all()
-    authentication_classes = []
+    # authentication_classes = []
 
     @action(methods=["get"], detail=True, url_path="info")
     def get_task_info(self, request, *args, **kwargs):

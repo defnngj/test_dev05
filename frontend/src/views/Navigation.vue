@@ -12,25 +12,25 @@
           active-text-color="#ffd04b"
         >
           <!-- 项目管理 -->
-          <router-link to="/">
+          <router-link to="/main/project">
             <el-menu-item index="1">
               <i class="el-icon-menu"></i>
               <span slot="title">项目管理</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/module">
+          <router-link to="/main/module">
             <el-menu-item index="2">
               <i class="el-icon-s-grid"></i>
               <span slot="title">模块管理</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/case">
+          <router-link to="/main/case">
             <el-menu-item index="3">
               <i class="el-icon-s-data"></i>
               <span slot="title">用例管理</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/task">
+          <router-link to="/main/task">
             <el-menu-item index="4">
               <i class="el-icon-s-order"></i>
               <span slot="title">任务管理</span>
@@ -41,13 +41,13 @@
 
       <el-container>
         <el-header style="text-align: right; font-size: 12px">
-          <span>王小虎</span>
-          <el-dropdown>
+          <span>{{user.name}}</span>
+          <el-dropdown @command="handleCommand" style="left: 5px;">
             <i class="el-icon-setting" style="margin-right: 15px"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>查看</el-dropdown-item>
-              <el-dropdown-item>新增</el-dropdown-item>
-              <el-dropdown-item>删除</el-dropdown-item>
+              <el-dropdown-item command="center">个人中心</el-dropdown-item>
+              <el-dropdown-item command="setting">设置</el-dropdown-item>
+              <el-dropdown-item command="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-header>
@@ -60,29 +60,51 @@
 </template>
 
 <script>
+import UserApi from  "../request/user"
+
 export default {
   computed: {
     onRoutes() {
-      if (this.$route.path === '/module') {
+      if (this.$route.path === '/main/module') {
         return '2'
-      } else if (this.$route.path === '/case') {
+      } else if (this.$route.path === '/main/case') {
         return '3'
-      } else if (this.$route.path === '/task') {
+      } else if (this.$route.path === '/main/task') {
         return '4'
       } 
       return '1'
     }
   },
   data() {
-    const item = {
-      date: "2016-05-02",
-      name: "王小虎",
-      address: "上海市普陀区金沙江路 1518 弄",
-    };
     return {
-      tableData: Array(20).fill(item),
+      user: {
+        'id': '',
+        "name": "",
+      },
     };
   },
+  created() {
+    const user = sessionStorage.getItem('user')
+    this.user = JSON.parse(user);
+  },
+  methods: {
+    async handleCommand(command) {
+      console.log(command);
+      if (command === 'logout') {
+        const data = {
+          'id': this.user.id,
+        }
+        const res = await UserApi.logout(data)
+        if(res.success == true) {
+          // sessionStorage.removeItem('user')
+          sessionStorage.clear()
+          this.$router.push('/login')
+        } else {
+          this.$message.error(res.error.message)
+        }
+      }
+    }
+  }
 };
 </script>
 

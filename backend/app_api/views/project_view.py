@@ -11,7 +11,7 @@ from app_common.utils.token_auth import TokenAuthentication
 
 
 class ProjectView(BaseAPIView):
-    authentication_classes = []
+    # authentication_classes = []
 
     def get(self, request, *args, **kwargs):
         """

@@ -9,7 +9,7 @@ from app_api.serializer.config import AssertType, MethodType, ParamsType
 
 class CaseViewSet(BaseViewSet):
     queryset = TestCase.objects.all()
-    authentication_classes = []
+    # authentication_classes = []
 
     @action(methods=["get"], detail=True, url_path="info")
     def get_case_info(self, request, *args, **kwargs):

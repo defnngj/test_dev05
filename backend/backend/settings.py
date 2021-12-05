@@ -132,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'app_common.utils.token_auth.TokenAuthentication'  # 自定义全局认证
+        'app_common.utils.token_auth.TokenAuthentication'  # 自定义全局认证
     ],
 }
 
