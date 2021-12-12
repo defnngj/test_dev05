@@ -36,6 +36,12 @@
               <span slot="title">任务管理</span>
             </el-menu-item>
           </router-link>
+          <router-link to="/main/report">
+            <el-menu-item index="5">
+              <i class="el-icon-s-marketing"></i>
+              <span slot="title">报告管理</span>
+            </el-menu-item>
+          </router-link>
         </el-menu>
       </el-aside>
 
@@ -71,6 +77,8 @@ export default {
         return '3'
       } else if (this.$route.path === '/main/task') {
         return '4'
+      } else if (this.$route.path === '/main/report') {
+        return '5'
       } 
       return '1'
     }

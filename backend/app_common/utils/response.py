@@ -32,6 +32,9 @@ class Error:
     TASK_ID_NULL = {"10051", "task ID不存在"}
     TASK_OBJECT_NULL = {"10041": "通过id查询任务不存在"}
 
+    RESULT_ID_NULL = {"10061", "task ID不存在"}
+    RESULT_OBJECT_NULL = {"10061": "通过id查询任务不存在"}
+
 
 def response_fail(error=""):
     """
