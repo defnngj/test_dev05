@@ -5,8 +5,8 @@
       <img src="../assets/illustration.png" width="100%" height="100%" alt="" />
     </div>
     <div class="project-desc">
-      <h1>接口测试平台</h1>
-      <p>接口测试平台用于学习。 包含项目管理、模块管理、用例管理、任务管理等模块。轻松实现接口自动化测试。</p>
+      <h1>Quick.接口测试平台</h1>
+      <p>接口测试平台用于教学。平台包含项目管理、模块管理、用例管理、任务管理、报告管理额等模块，轻松实现接口自动化测试。</p>
     </div>
     <div class="login-window">
       <el-tabs v-model="activeName" type="border-card" style="width: 350px;">

@@ -3,7 +3,7 @@
     <el-container style="height: 100%; border: 1px solid #eee">
       <el-aside width="160px" style="background-color: rgb(84, 92, 100)">
         <!-- <h1>重定向</h1> -->
-        <img class="logo" alt="itest logo" src="../assets/itestLogo.png" />
+        <img class="logo" alt="itest logo" src="../assets/quick.svg" />
         <el-menu
           default-active="onRoutes"
           class="el-menu-vertical-demo"
@@ -139,7 +139,7 @@ a {
 .logo {
   margin-top: 20px;
   margin-bottom: 10px;
-  height: 15px;
+  height: 22px;
 }
 .el-header {
   background-color: #b3c0d1;
