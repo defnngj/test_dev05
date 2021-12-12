@@ -15,20 +15,20 @@
           <el-form :model="form" :rules="rules" ref="form" class="demo-form">
             <div class="main-login-input">
               <el-form-item prop="username">
-                <el-input placeholder="请输账号" v-model="form.username">
+                <el-input cy-data="username" placeholder="请输账号" v-model="form.username">
                   <template slot="prepend">账号</template>
                 </el-input>
               </el-form-item>
             </div>
             <div class="main-login-input">
               <el-form-item prop="password">
-                <el-input v-model="form.password" type="password" placeholder="请输入密码">
+                <el-input cy-data="password" v-model="form.password" type="password" placeholder="请输入密码">
                   <template slot="prepend">密码</template>
                 </el-input>
               </el-form-item>
             </div>
             <div class="main-login-button">
-              <el-button id="loginButton" type="primary" @click="submitForm('form')">登录</el-button>
+              <el-button cy-data="loginBtn" id="loginButton" type="primary" @click="submitForm('form')">登录</el-button>
             </div>
           </el-form>
         </el-tab-pane>

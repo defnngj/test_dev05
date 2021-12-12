@@ -8,7 +8,7 @@
     </div>
     <el-card class="box-card">
       <div class="filter-line">
-        <el-button type="primary" @click="showCreate()">创建</el-button>
+        <el-button cy-data="create-project" type="primary" @click="showCreate()">创建</el-button>
       </div>
       <!-- 表格 -->
       <el-table :data="tableData"
@@ -35,8 +35,8 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" width="100">
           <template slot-scope="scope">
-            <el-button @click="showEdit(scope.row)" type="primary" size="mini" circle icon="el-icon-edit"></el-button>
-            <el-button @click="deleteProject(scope.row)" type="danger" size="mini" circle icon="el-icon-delete"></el-button>
+            <el-button cy-data="edit-project" @click="showEdit(scope.row)" type="primary" size="mini" circle icon="el-icon-edit"></el-button>
+            <el-button cy-data="delete-project" @click="deleteProject(scope.row)" type="danger" size="mini" circle icon="el-icon-delete"></el-button>
           </template>
         </el-table-column>
       </el-table>

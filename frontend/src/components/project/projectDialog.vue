@@ -3,20 +3,20 @@
     <el-dialog :title=showTitle :visible.sync="showStatus" @close="cancelProject()">
       <el-form v-if="inResize === true" :rules="rules" ref="form" :model="form" label-width="80px">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name"></el-input>
+          <el-input cy-data="project-name" v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input type="textarea" v-model="form.describe"></el-input>
+          <el-input cy-data="project-desc" type="textarea" v-model="form.describe"></el-input>
         </el-form-item>
         <el-form-item label="状态">
           <span style="float: left;">
-            <el-switch v-model="form.status"></el-switch>
+            <el-switch cy-data="project-status" v-model="form.status"></el-switch>
           </span>
         </el-form-item>
         <el-form-item>
           <div class="dialog-footer">
-            <el-button @click="cancelProject()">取消</el-button>
-            <el-button type="primary" @click="onSubmit('form')">保存</el-button>
+            <el-button cy-data="cancel-project" @click="cancelProject()">取消</el-button>
+            <el-button cy-data="save-project" type="primary" @click="onSubmit('form')">保存</el-button>
           </div>
         </el-form-item>
       </el-form>
