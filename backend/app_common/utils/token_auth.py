@@ -16,7 +16,6 @@ class TokenAuthentication(BaseAuthentication):
         # token = request.query_params.get('token')
 
         # 2. 直接在请求头中获取token
-        print("header-->", request.META)
         header_token = request.META.get("HTTP_TOKEN", "")
 
         if header_token == "":
